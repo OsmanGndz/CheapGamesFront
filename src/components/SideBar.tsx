@@ -28,11 +28,23 @@ const navbarMenus = [
   },
 ];
 
-const SideBar: React.FC<SideBarProps> = ({ setIsSideBarOpen }) => {
+const SideBar: React.FC<SideBarProps> = ({ setIsSideBarOpen, isSideBarOpen }) => {
   const navigate = useNavigate();
-  const [isBarOpen, setIsBarOpen] = useState(false);
+  const [openMenus, setOpenMenus] = useState<{ [key: number]: boolean }>({});
+
+  const toggleSubMenu = (id: number) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
   return (
-    <div className="flex flex-col lg:hidden fixed bg-slate-800 w-[80%] h-full z-10 text-[20px]">
+    <div
+      className={`fixed lg:hidden top-0 left-0 h-full w-[80%] z-50 bg-slate-800 text-[20px] transition-transform duration-700 ease-in-out transform ${
+        isSideBarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       <div className="font-semibold bg-slate-700 p-4 flex justify-between items-center">
         <p>MENÜ</p>
         <MdCancel
@@ -40,37 +52,65 @@ const SideBar: React.FC<SideBarProps> = ({ setIsSideBarOpen }) => {
           onClick={() => setIsSideBarOpen(false)}
         />
       </div>
+
       <div className="flex flex-col gap-6 pt-10 font-semibold text-[18px]">
-        {navbarMenus.map((menu, index) =>
+        {navbarMenus.map((menu) =>
           menu.SubMenus ? (
             <div
-              key={`${menu.name}-${index}`}
-              className="relative px-6 py-2 cursor-pointer rounded-lg hover:bg-blue-400 transition-all duration-200 flex flex-col "
-              onClick={() => setIsBarOpen(!isBarOpen)}
+              key={menu.id}
+              className="px-6 py-2 cursor-pointer rounded-lg transition-all duration-400 flex flex-col"
             >
-              <div className="flex items-center ">
+              <div
+                className="flex items-center justify-between"
+                onClick={() => toggleSubMenu(menu.id)}
+              >
                 <p className="text-white">{menu.name}</p>
-                {isBarOpen ? (
-                  <FiMinusCircle className="absolute right-6 text-[24px]" />
+                {openMenus[menu.id] ? (
+                  <FiMinusCircle className="text-[24px] text-blue-400" />
                 ) : (
-                  <FiPlusCircle className="absolute right-6 text-[24px]" />
+                  <FiPlusCircle className="text-[24px]" />
                 )}
               </div>
-              {isBarOpen && (
-                <div className="bg-slate-700 w-full mt-2 transition-all duration-800 font-normal text-[16px] rounded-b-2xl">
+
+              <div
+                className={`grid transition-all duration-500 overflow-hidden transform ${
+                  openMenus[menu.id]
+                    ? "grid-rows-[1fr] opacity-100 max-h-[500px]"
+                    : "grid-rows-[0fr] opacity-0 max-h-0"
+                }`}
+              >
+                <div className="flex flex-col bg-slate-700 w-full mt-2 font-normal text-[16px] rounded-b-2xl">
                   {menu.SubMenus.map((subMenu, index) => (
-                    <div key={`${subMenu}-${index}`} className={`py-2 px-8 ${menu.SubMenus.length -1 === index ? "": "border-b border-stone-800"}` }>
-                        <p onClick={() => navigate(subMenu.url)}>{subMenu.name}</p>
+                    <div
+                      key={`${subMenu.name}-${index}`}
+                      className={`py-2 px-8 ${
+                        menu.SubMenus.length - 1 === index
+                          ? ""
+                          : "border-b border-stone-800"
+                      }`}
+                    >
+                      <p
+                        onClick={() => {
+                          navigate(subMenu.url);
+                          setIsSideBarOpen(false);
+                        }}
+                        className="cursor-pointer text-white hover:text-blue-400"
+                      >
+                        {subMenu.name}
+                      </p>
                     </div>
                   ))}
                 </div>
-              )}
+              </div>
             </div>
           ) : (
             <div
-              key={`${menu.name}-${index}`}
+              key={menu.id}
               className="px-6 py-2 cursor-pointer rounded-lg hover:bg-blue-400 transition-all duration-200"
-              onClick={() => menu.url && navigate(menu.url)}
+              onClick={() => {
+                navigate(menu.url || "/");
+                setIsSideBarOpen(false);
+              }}
             >
               <p className="text-white">{menu.name}</p>
             </div>
@@ -80,5 +120,6 @@ const SideBar: React.FC<SideBarProps> = ({ setIsSideBarOpen }) => {
     </div>
   );
 };
+
 
 export default SideBar;
