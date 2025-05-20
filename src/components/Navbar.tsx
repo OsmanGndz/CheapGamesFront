@@ -79,6 +79,7 @@ const Navbar: React.FC<NavbarProps> = ({setIsSideBarOpen}) => {
             <p className="text-[30px] italic font-bold bg-gradient-to-r from-blue-300 to-blue-700 bg-clip-text text-transparent">
               CHEAPGAMES
             </p>
+            <p></p>
           </div>
           <div className="flex items-center justify-between bg-slate-900 rounded-lg p-2 w-[50%]">
             <input
@@ -140,7 +141,7 @@ const Navbar: React.FC<NavbarProps> = ({setIsSideBarOpen}) => {
           </div>
         </div>
       </div>
-      <div className="hidden lg:flex w-full px-2">
+      <div className="hidden lg:flex w-full px-2 z-15">
         <NavbarMenus />
       </div>
     </div>

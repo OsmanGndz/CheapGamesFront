@@ -1,8 +1,55 @@
+import Slide from "../components/Slide";
+import yanslide1 from "../assets/Yanslides/yanslide1.jpg";
+import yanslide2 from "../assets/Yanslides/yanslide2.jpg";
+import yanslide3 from "../assets/Yanslides/yanslide3.jpg";
+import { FaArrowRight } from "react-icons/fa";
 
+const yanSlides = [
+  {
+    id: 1,
+    title: "Yan Slide 1",
+    imageUrl: yanslide1,
+  },
+  {
+    id: 2,
+    title: "Yan Slide 2",
+    imageUrl: yanslide2,
+  },
+  {
+    id: 3,
+    title: "Yan Slide 3",
+    imageUrl: yanslide3,
+  },
+];
 const Home = () => {
   return (
-    <div className='text-3xl'>Home</div>
-  )
-}
+    <div className="w-full h-full">
+      <div className="flex w-full aspect-[25/9] gap-1 lg:gap-4">
+        <div className="w-[70%] h-full">
+          <Slide />
+        </div>
+        <div className="w-[30%] h-full">
+          <div className="flex flex-col gap-1 lg:gap-4 w-full h-full">
+            {yanSlides.map((slide) => (
+              <div
+                key={slide.title}
+                className="relative w-full h-full cursor-pointer overflow-hidden group"
+              >
+                <img
+                  src={slide.imageUrl}
+                  alt={slide.title}
+                  className="w-full h-full object-cover rounded-sm lg:rounded-lg transform transition-transform duration-400 group-hover:scale-115"
+                />
+                <div className="absolute right-4 bottom-4  transition-all duration-300 opacity-0 group-hover:opacity-100  hover:text-blue-400">
+                  <FaArrowRight />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-export default Home
+export default Home;
