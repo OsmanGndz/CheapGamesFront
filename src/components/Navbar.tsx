@@ -141,7 +141,7 @@ const Navbar: React.FC<NavbarProps> = ({setIsSideBarOpen}) => {
           </div>
         </div>
       </div>
-      <div className="hidden lg:flex w-full px-2 z-15">
+      <div className="hidden lg:flex w-full px-2 z-25">
         <NavbarMenus />
       </div>
     </div>

@@ -29,7 +29,7 @@ const NavbarMenus = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 ">
       {navbarMenus.map((menu, index) =>
         menu.SubMenus ? (
           <div
@@ -39,7 +39,7 @@ const NavbarMenus = () => {
             <p className="text-white">{menu.name}</p>
             <IoMdArrowDropdown className="absolute right-1 top-[11px] text-[15px]" />
             {/* Submenu */}
-            <div className="absolute left-[28px] top-full hidden group-hover:flex flex-col gap-1 justify-center items-center bg-slate-800 text-white rounded-md shadow-lg z-10 min-w-[120px] px-4 py-2 font-semibold">
+            <div className="absolute left-[28px] top-full hidden group-hover:flex flex-col gap-1 justify-center items-center bg-slate-800 text-white rounded-md shadow-lg z-25 min-w-[120px] px-4 py-2 font-semibold">
               {menu.SubMenus.map((subMenu, idx) => (
                 <span
                   key={`${subMenu.name}-${idx}`}
