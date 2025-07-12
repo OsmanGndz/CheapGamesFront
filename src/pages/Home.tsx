@@ -7,6 +7,9 @@ import MiniSlider from "../components/MiniSlider";
 import { GiTrophyCup } from "react-icons/gi";
 import { IoDiamondSharp, IoRocketSharp } from "react-icons/io5";
 import { FaRegHourglassHalf } from "react-icons/fa6";
+import { useQuery } from "@tanstack/react-query";
+import { fetchGameData } from "../services/GameService";
+
 
 const yanSlides = [
   {
@@ -23,153 +26,6 @@ const yanSlides = [
     id: 3,
     title: "Yan Slide 3",
     imageUrl: yanslide3,
-  },
-];
-const allGamesSlideData = [
-  {
-    title: "All Games Slide 1",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÇOK SATANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 2",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÇOK SATANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 3",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖNE ÇIKANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-    
-  },
-  {
-    title: "All Games Slide 1",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖNE ÇIKANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 1",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖNE ÇIKANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 1",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖNE ÇIKANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 1",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖNE ÇIKANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 1",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖNE ÇIKANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 1",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖNE ÇIKANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 1",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖNE ÇIKANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 2",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖNE ÇIKANLAR",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 3",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "YENİ EKLENENLER",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 2",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "YENİ EKLENENLER",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 3",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "YENİ EKLENENLER",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 2",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖN SİPARİŞ OYUNLARI",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
-  },
-  {
-    title: "All Games Slide 3",
-    imageUrl: "https://pbs.twimg.com/media/GhbgbkcWsAAMRGn.jpg:large",
-    filter: "ÖN SİPARİŞ OYUNLARI",
-    price: 150,
-    discount: 20,
-    category: "PC",
-    totalSales: 1000,
   },
 ];
 
@@ -192,6 +48,14 @@ const allGamesFilters = [
   },
 ];
 const Home = () => {
+  const {data: allGamesSlideData, isLoading, error} = useQuery({
+    queryKey: ["allGamesSlideData"],
+    queryFn: fetchGameData
+  })
+
+  //if (isLoading) return <p>Yükleniyor...</p>;
+  //if (error) return <p>Hata oluştu</p>;
+
   return (
     <div className="w-full h-full flex flex-col gap-8">
       <div className="flex w-full aspect-[16/9] lg:aspect-[25/9] gap-1 lg:gap-4">

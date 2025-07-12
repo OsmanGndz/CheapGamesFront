@@ -4,9 +4,9 @@ import FilterMenu from "./FilterMenu";
 import { TbBasketPlus } from "react-icons/tb";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const MiniSlider: React.FC<MiniSliderProps> = ({ data, filters }) => {
+const MiniSlider: React.FC<MiniSliderProps> = ({ data: filteredData, filters }) => {
   const [filter, setFilter] = useState<string>(filters[0].name);
-  const filteredData = data.filter((item) => item.filter.includes(filter));
+  //const filteredData = data.filter((item) => item.filter.includes(filter));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState<number>(3);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -26,6 +26,7 @@ const MiniSlider: React.FC<MiniSliderProps> = ({ data, filters }) => {
   }, []);
 
   const goNext = () => {
+    console.log(filteredData.length, visibleCards);
     setCurrentIndex((prev) =>
       prev >= Math.max(filteredData.length - visibleCards, 0) ? 0 : prev + 1
     );
@@ -76,22 +77,22 @@ const MiniSlider: React.FC<MiniSliderProps> = ({ data, filters }) => {
           >
             {filteredData.map((item, index) => (
               <div
-                key={`${item.title}-${index}`}
+                key={`${item.gameName}-${index}`}
                 className="relative flex flex-col flex-shrink-0 rounded-b-lg group overflow-hidden cursor-pointer" style={{width:`${ window.innerWidth > 1024 ? (100 / visibleCards) - 1 : (100/visibleCards) - 2}%`}}
               >
                 <img
-                  src={item.imageUrl}
-                  alt={item.title}
+                  src={item.gameImage}
+                  alt={item.gameName}
                   className="w-full h-full object-cover rounded-md group-hover:scale-110 transition-transform duration-300"
                 />
                 <div className="flex flex-col text-[12px] items-center pt-2 pb-6 gap-1 w-full bottom-0 bg-slate-800 rounded-b-lg z-10">
-                  {item.title}
+                  {item.gameName}
                   <div className="flex flex-col sm:flex-row items-center justify-center w-full h-full font-bold">
                     <span className="text-sm text-white">
-                      {item.price.toFixed(2)} TL
+                      {item.gamePrice.toFixed(2)} TL
                     </span>
                     <span className="text-sm font-normal text-zinc-400 line-through ml-2">
-                      {(item.price * (1 - item.discount / 100)).toFixed(2)} TL
+                      {(item.gamePrice * (1 - item.gameDiscount / 100)).toFixed(2)} TL
                     </span>
                   </div>
                 </div>

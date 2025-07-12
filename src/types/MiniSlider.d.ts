@@ -1,12 +1,16 @@
 export interface MiniSliderProps {
     data: {
-        title: string;
-        imageUrl: string;
-        filter: string;
-        price: number;
+        Id: number;
+        gameName: string;
+        categoryName: string;
+        platformName: string;
+        gameDescription: string;
+        gameDiscount: number;
+        gamePrice: number;
         discount: number;
-        category: string;
+        gameImage: string;
         totalSales: number;
+        createdOn: string;
     }[];
     filters: {
         name: string;
