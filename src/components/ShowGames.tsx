@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import type { FilterProps, MiniSliderProps } from "../types/MiniSlider";
+import React, { useState } from "react";
+import type { ShowGamesProps } from "../types/ShowGames";
 import FilterMenu from "./FilterMenu";
+import type { FilterPattern } from "vite";
+import type { FilterProps } from "../types/MiniSlider";
 import GameCard from "./GameCard";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import FilterGame from "./FilterGame";
 
 const data = [
   {
@@ -239,174 +241,39 @@ const data = [
   },
 ];
 
-interface dataProps {
-  gameName: string;
-  gameDescription: string;
-  gameImage: string;
-  gamePrice: number;
-  gameDiscount: number;
-  categoryName: string;
-  platformName: string;
-  totalSales: number;
-  isStanding: boolean;
-  releaseDate: string;
-}
-
-const MiniSlider: React.FC<MiniSliderProps> = ({ filters = [] }) => {
-  const [filter, setFilter] = useState<FilterProps["filter"]>(
-    filters[0] || null
-  );
-  const [filteredData, setFilteredData] = useState<dataProps[]>(
-    data.slice(0, 12)
-  );
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleCards, setVisibleCards] = useState<number>(1);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [isloading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-
-  // Responsive card sayısını güvenli bir şekilde hesapla
-  const getVisibleCards = () => {
-    if (typeof window === "undefined") return 1;
-
-    const width = window.innerWidth;
-    if (width < 640) return 2;
-    if (width < 1024) return 4;
-    return 6;
-  };
-
-  useEffect(() => {
-    const updateVisibleCards = () => {
-      const newVisibleCards = getVisibleCards();
-      setVisibleCards(newVisibleCards);
-    };
-
-    updateVisibleCards();
-    window.addEventListener("resize", updateVisibleCards);
-
-    return () => window.removeEventListener("resize", updateVisibleCards);
-  }, []);
-
-  const goNext = () => {
-    setCurrentIndex((prev) => {
-      const maxIndex = Math.max(filteredData.length - visibleCards, 0);
-      return prev >= maxIndex ? 0 : prev + 1;
-    });
-  };
-
-  const handleNext = () => {
-    goNext();
-    resetInterval();
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => {
-      const maxIndex = Math.max(filteredData.length - visibleCards, 0);
-      return prev <= 0 ? maxIndex : prev - 1;
-    });
-    resetInterval();
-  };
-
-  const startInterval = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(goNext, 10000);
-  };
-
-  const resetInterval = () => {
-    startInterval();
-  };
-
-  useEffect(() => {
-    setCurrentIndex(0);
-    startInterval();
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [filter, filteredData.length, visibleCards]);
-
-  const translateX = -(currentIndex * (100 / visibleCards + 0.05));
-
+const ShowGames: React.FC<ShowGamesProps> = ({ filters = [] }) => {
+  const [filter, setFilter] = useState<string>(filters[0] || "ALL");
   // Oyun kartına tıklandığında çalışacak fonksiyon
-  const handleGameClick = (gameData: dataProps) => {
-    console.log("Oyun tıklandı:", gameData);
+  const handleGameClick = () => {
+    console.log("Oyun tıklandı:");
     // Burada oyun detay sayfasına yönlendirme yapabilirsiniz
   };
 
   // Sepete ekle butonuna tıklandığında çalışacak fonksiyon
-  const handleAddToCart = (gameData: dataProps) => {
-    console.log("Sepete eklendi:", gameData);
+  const handleAddToCart = () => {
+    console.log("Sepete eklendi:");
     // Burada sepete ekleme işlemi yapabilirsiniz
   };
 
   return (
-    <div className="flex flex-col justify-center gap-8 w-full relative">
-      {filters?.length > 0 && (
-        <FilterMenu
-          filters={filters}
-          filter={filter}
-          setFilter={setFilter}
-          data={filteredData}
-          setFilteredData={setFilteredData}
-          setIsLoading={setIsLoading}
-          setError={setError}
-        />
-      )}
-
-      {isloading && (
-        <p className="flex w-full items-center justify-center">...Yükleniyor</p>
-      )}
-
-      {error.length > 0 && (
-        <p className="flex w-full items-center justify-center text-red-500">
-          Error: {error}
-        </p>
-      )}
-
-      {filteredData.length > 0 && (
-        <div className="relative overflow-hidden w-full">
-          {/* Slider Container */}
-          <div
-            className="flex transition-transform duration-700 ease-in-out items-stretch"
-            style={{
-              transform: `translateX(${translateX}%)`,
-              gap: "0.5rem",
-            }}
-          >
-            {filteredData.map((item, index) => (
-              <GameCard
-                key={`${item.gameName}-${index}`}
-                {...item}
-                width={`calc(${100 / visibleCards}% - 0.44rem)`}
-                minWidth="90px"
-                onClick={handleGameClick}
-                onAddToCart={handleAddToCart}
-              />
-            ))}
-          </div>
-
-          {/* Navigation Buttons */}
-          {filteredData.length > visibleCards && (
-            <>
-              <button
-                className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-black/70 text-white z-30 cursor-pointer p-2 sm:p-3 hover:text-blue-400 hover:bg-black/80 transition-colors duration-200 rounded-r-md"
-                onClick={handlePrev}
-                aria-label="Previous"
-              >
-                <FaArrowLeft className="text-sm sm:text-xl" />
-              </button>
-              <button
-                className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-black/70 text-white z-30 cursor-pointer p-2 sm:p-3 hover:text-blue-400 hover:bg-black/80 transition-colors duration-200 rounded-l-md"
-                onClick={handleNext}
-                aria-label="Next"
-              >
-                <FaArrowRight className="text-sm sm:text-xl" />
-              </button>
-            </>
-          )}
-        </div>
-      )}
+    <div className="w-full flex flex-col gap-8">
+      <div>
+        {filters?.length > 0 && (
+          <FilterGame filters={filters} filter={filter} setFilter={setFilter} />
+        )}
+      </div>
+      <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        {data.slice(0, 12).map((game, index) => (
+          <GameCard
+            key={`${game.gameName}-${index}`}
+            {...game}
+            onClick={handleGameClick}
+            onAddToCart={handleAddToCart}
+          />
+        ))}
+      </div>
     </div>
   );
 };
 
-export default MiniSlider;
+export default ShowGames;

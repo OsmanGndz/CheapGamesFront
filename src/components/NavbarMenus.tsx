@@ -21,7 +21,12 @@ const navbarMenus = [
   {
     id: 3,
     name: "PS4-PS5 OYUNLARI",
-    url: "/ps-games",
+    url: "/playstation",
+  },
+  {
+    id: 4,
+    name: "KAMPANYALAR",
+    url: "/discounts",
   },
 ];
 
