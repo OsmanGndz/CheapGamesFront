@@ -1,4 +1,3 @@
-// components/PriceFilter.tsx
 import React, { useState } from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import "./PriceFilter.css";
@@ -8,73 +7,76 @@ interface PriceRange {
   max: number;
 }
 
+interface AllFilter {
+  priceRange: PriceRange;
+}
+
 interface PriceFilterProps {
   onPriceChange: (priceRange: PriceRange) => void;
   initialMin?: number;
   initialMax?: number;
   maxLimit?: number;
+  filters?: AllFilter;
+  setFilters?: React.Dispatch<React.SetStateAction<AllFilter>>;
 }
 
-const PriceFilter: React.FC<PriceFilterProps> = ({ 
-  onPriceChange, 
-  initialMin = 0, 
+const PriceFilter: React.FC<PriceFilterProps> = ({
+  onPriceChange,
+  initialMin = 0,
   initialMax = 10000,
-  maxLimit = 20000 
+  maxLimit = 20000,
+  filters,
+  setFilters,
 }) => {
-  const [priceOpen, setPriceOpen] = useState(true);
-  const [priceRange, setPriceRange] = useState<PriceRange>({ 
-    min: initialMin, 
-    max: initialMax 
-  });
-  
+  const isControlled = filters && setFilters;
+
+  const getInitialRange = (): PriceRange => {
+    if (isControlled) return filters!.priceRange;
+    return { min: initialMin, max: initialMax };
+  };
+
+  const [localRange, setLocalRange] = useState<PriceRange>(getInitialRange);
+  const currentRange = isControlled ? filters!.priceRange : localRange;
+
+  // Local state güncellenip dışarıya bildirilir
+  const updateRange = (range: PriceRange) => {
+    if (isControlled) {
+      setFilters!((prev) => ({ ...prev, priceRange: range }));
+    } else {
+      setLocalRange(range);
+    }
+    onPriceChange(range);
+  };
+
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    const newRange = {
-      ...priceRange,
-      min: Math.min(value, priceRange.max - 100)
-    };
-    setPriceRange(newRange);
-    onPriceChange(newRange);
+    const value = Math.min(parseInt(e.target.value), currentRange.max - 100);
+    updateRange({ ...currentRange, min: value });
   };
 
   const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    const newRange = {
-      ...priceRange,
-      max: Math.max(value, priceRange.min + 100)
-    };
-    setPriceRange(newRange);
-    onPriceChange(newRange);
+    const value = Math.max(parseInt(e.target.value), currentRange.min + 100);
+    updateRange({ ...currentRange, max: value });
   };
 
   const handleManualMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value) || 0;
-    const newRange = { ...priceRange, min: value };
-    setPriceRange(newRange);
-    onPriceChange(newRange);
+    updateRange({ ...currentRange, min: value });
   };
 
   const handleManualMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value) || 0;
-    const newRange = { ...priceRange, max: value };
-    setPriceRange(newRange);
-    onPriceChange(newRange);
+    updateRange({ ...currentRange, max: value });
   };
 
-  const handleFilterApply = () => {
-    onPriceChange(priceRange);
-    console.log('Fiyat filtresi uygulandı:', priceRange);
+  const handleFilterReset = () => {
+    const reset = { min: initialMin, max: initialMax };
+    updateRange(reset);
   };
 
-  const getSliderBackground = () => {
-    const minPercent = (priceRange.min / maxLimit) * 100;
-    const maxPercent = (priceRange.max / maxLimit) * 100;
-    
-    return `linear-gradient(to right, #374151 0%, #374151 ${minPercent}%, #3b82f6 ${minPercent}%, #3b82f6 ${maxPercent}%, #374151 ${maxPercent}%, #374151 100%)`;
-  };
+  const [priceOpen, setPriceOpen] = useState(true);
 
   return (
-    <div className="price-filter">
+    <div className="price-filter py-2">
       <div
         className="price-filter-header p-2 border-b-1"
         onClick={() => setPriceOpen(!priceOpen)}
@@ -82,64 +84,63 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
         <h1>Fiyat</h1>
         {priceOpen ? <FaArrowUp className="arrow-icon" /> : <FaArrowDown />}
       </div>
-      
+
       {priceOpen && (
         <div className="price-filter-content px-2">
           <div className="price-display">
-            <span>{priceRange.min} TL</span>
-            <span>{priceRange.max} TL</span>
+            <span>{currentRange.min} TL</span>
+            <span>{currentRange.max} TL</span>
           </div>
-          
+
           <div className="slider-container mb-2">
             <div className="slider-wrapper">
               <input
                 type="range"
-                min="0"
+                min={0}
                 max={maxLimit}
-                value={priceRange.min}
+                value={currentRange.min}
                 onChange={handleMinChange}
                 className="slider slider-min"
               />
               <input
                 type="range"
-                min="0"
+                min={0}
                 max={maxLimit}
-                value={priceRange.max}
+                value={currentRange.max}
                 onChange={handleMaxChange}
                 className="slider slider-max"
               />
             </div>
           </div>
-          
+
           <div className="flex gap-4">
-            <div className="input-group">
-              <input
-                type="number"
-                placeholder="En düşük fiyat"
-                value={priceRange.min}
-                onChange={handleManualMinChange}
-                className="price-input"
-              />
-            </div>
-            <div className="input-group">
-              <input
-                type="number"
-                placeholder="En yüksek fiyat"
-                value={priceRange.max}
-                onChange={handleManualMaxChange}
-                className="price-input"
-              />
-            </div>
+            <input
+              type="number"
+              placeholder="En düşük fiyat"
+              value={currentRange.min}
+              onChange={handleManualMinChange}
+              className="price-input"
+            />
+            <input
+              type="number"
+              placeholder="En yüksek fiyat"
+              value={currentRange.max}
+              onChange={handleManualMaxChange}
+              className="price-input"
+            />
           </div>
-          
-          <button 
-            onClick={handleFilterApply}
-            className="filter-button"
-          >
-            Filtrele
-          </button>
         </div>
       )}
+
+      <button onClick={() => onPriceChange(currentRange)} className="filter-button mx-2">
+        Filtrele
+      </button>
+      <button
+        onClick={handleFilterReset}
+        className="px-4 py-2 rounded-[4px] mx-2 bg-red-500 text-white cursor-pointer"
+      >
+        Filtreyi Sıfırla
+      </button>
     </div>
   );
 };

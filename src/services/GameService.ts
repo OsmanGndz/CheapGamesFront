@@ -12,4 +12,32 @@ export const fetchFilteredGameData = async (filter: string) => {
       }
     });
     return response.data;
-}  
+}
+
+export const fetchGamesByCategory = async (value:string) => {
+  const response = await api.get("/game/category", {
+    params: {
+      categoryName: value
+    }
+  });
+  return response.data;
+}
+
+export const fetchGamesByPlatform = async (value:string) => {
+
+  if(value ==="Hepsi"){
+    const response = await api.get("/game/category",{
+      params: {
+        categoryName: "computer"
+      }
+    });
+    return response.data;
+  }
+
+  const response = await api.get("/game/platform", {
+    params: {
+      platformName: value
+    }
+  });
+  return response.data;
+}

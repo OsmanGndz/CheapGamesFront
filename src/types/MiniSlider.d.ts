@@ -1,18 +1,7 @@
 export interface MiniSliderProps {
-    filters?: {
-        name: string;
-        icon: React.ReactNode;
-        endpoint: string;
-    }[];
-}
-
-export interface FilterProps {
-    filters: {
-        name: string;
-        icon: React.ReactNode;
-        endpoint: string;
-    }[];
-    data: {
+    isloading?: boolean;
+    error?: string;
+    data?: {
         Id?: number;
         gameName: string;
         categoryName: string;
@@ -25,13 +14,18 @@ export interface FilterProps {
         isStanding: boolean;
         releaseDate: string;
     }[];
+}
+
+export interface FilterProps {
+    filters: {
+        name: string;
+        icon: React.ReactNode;
+        endpoint: string;
+    }[];
     filter:{
         name: string;
         icon: React.ReactNode;
         endpoint: string;
     };
-    setIsLoading: React.Dispatch<React.StateAction<boolean>>;
-    setError: React.Dispatch<React.StateAction<string>>;
     setFilter: React.Dispatch<React.SetStateAction<FilterProps["filter"]>>;
-    setFilteredData: React.Dispatch<React.SetStateAction<FilterProps["data"]>>;
 }

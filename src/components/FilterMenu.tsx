@@ -1,38 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchFilteredGameData } from "../services/GameService";
 import type { FilterProps } from "../types/MiniSlider";
-import { useEffect } from "react";
 
 const FilterMenu: React.FC<FilterProps> = ({
   filters,
   filter,
   setFilter,
-  setFilteredData,
-  setIsLoading,
-  setError,
 }) => {
-  // 1. React Query ile filtrelenmiş veriyi getir
-  // const {
-  //   data: filteredGames,
-  //   isLoading,
-  //   error,
-  // } = useQuery({
-  //   queryKey: ["games", filter.endpoint], // endpoint'e göre cache'lenir
-  //   queryFn: () => fetchFilteredGameData(filter.endpoint),
-  //   enabled: !!filter, // filtre varsa çalışır
-  //   staleTime: 1000 * 60 * 5,
-  // });
-
-  // // 2. Query'den gelen veriyi state'e aktar
-  // useEffect(() => {
-  //   if (filteredGames) {
-  //     setFilteredData(filteredGames);
-  //   }
-  //   setIsLoading(isLoading);
-  //   setError(error);
-  // }, [filteredGames, isLoading, error]);
-
-  // 3. Filtre seçildiğinde sadece filtre state'ini değiştir
   const handleFilterChange = (selectedFilter: FilterProps["filter"]) => {
     setFilter(selectedFilter);
   };

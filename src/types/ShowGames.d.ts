@@ -1,5 +1,7 @@
 export interface ShowGamesProps {
-    filters?: string[];  
+    filters?: string[];
+    colNumber?: number;  
+    isPagination?: boolean;
 }
 
 export interface FilterGameProps {

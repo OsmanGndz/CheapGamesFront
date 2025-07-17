@@ -1,17 +1,13 @@
-import Slide from "../components/Slide";
-import yanslide1 from "../assets/Yanslides/yanslide1.jpg";
-import yanslide2 from "../assets/Yanslides/yanslide2.jpg";
-import yanslide3 from "../assets/Yanslides/yanslide3.jpg";
+import Slide from "../../components/Slide";
+import yanslide1 from "../../assets/Yanslides/yanslide1.jpg";
+import yanslide2 from "../../assets/Yanslides/yanslide2.jpg";
+import yanslide3 from "../../assets/Yanslides/yanslide3.jpg";
 import { FaArrowRight } from "react-icons/fa";
-import MiniSlider from "../components/MiniSlider";
-import { GiTrophyCup } from "react-icons/gi";
-import { IoDiamondSharp, IoRocketSharp } from "react-icons/io5";
-import { FaRegHourglassHalf } from "react-icons/fa6";
 import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import GameCard from "../components/GameCard";
-import FilterMenu from "../components/FilterMenu";
-import ShowGames from "../components/ShowGames";
+import ShowGames from "../../components/ShowGames";
+import FilterHome from "./FilterHome";
+import PlaystationHome from "./PlaystationHome";
 
 const yanSlides = [
   {
@@ -31,52 +27,10 @@ const yanSlides = [
   },
 ];
 
-const allGamesFilters = [
-  {
-    name: "ÇOK SATANLAR",
-    icon: <GiTrophyCup className="text-xl" />,
-    endpoint: "mostsales",
-  },
-  {
-    name: "ÖNE ÇIKANLAR",
-    icon: <IoRocketSharp className="text-xl" />,
-    endpoint: "standings",
-  },
-  {
-    name: "YENİ EKLENENLER",
-    icon: <IoDiamondSharp className="text-xl" />,
-    endpoint: "newadded",
-  },
-  {
-    name: "ÖN SİPARİŞ OYUNLARI",
-    icon: <FaRegHourglassHalf className="text-[15px]" />,
-    endpoint: "preorder",
-  },
-];
-const pcGameFilters = ["ALL", "STEAM", "ORİGİN", "UPLAY", "MİCROSOFT"];
+const pcGameFilters = ["Hepsi", "Steam", "Origin", "Uplay", "Microsoft"];
 const Home = () => {
   const navigate = useNavigate();
-  // const {data: allGamesSlideData, isLoading, error} = useQuery({
-  //   queryKey: ["allGamesSlideData"],
-  //   queryFn: fetchGameData,
-  //   refetchOnWindowFocus: true,
-  // })
 
-  // console.log(allGamesSlideData)
-
-  // if (isLoading) return <p>Yükleniyor...</p>;
-  // if (error) return <p>Hata oluştu</p>;
-  // Oyun kartına tıklandığında çalışacak fonksiyon
-  const handleGameClick = () => {
-    console.log("Oyun tıklandı:");
-    // Burada oyun detay sayfasına yönlendirme yapabilirsiniz
-  };
-
-  // Sepete ekle butonuna tıklandığında çalışacak fonksiyon
-  const handleAddToCart = () => {
-    console.log("Sepete eklendi:");
-    // Burada sepete ekleme işlemi yapabilirsiniz
-  };
   return (
     <div className="w-full h-full flex flex-col gap-8 items-center">
       <div className="flex w-full aspect-[16/9] lg:aspect-[25/9] gap-1 lg:gap-4">
@@ -105,7 +59,7 @@ const Home = () => {
       </div>
       <div className="flex flex-col w-full h-full gap-12">
         <div className="flex w-full h-full">
-          <MiniSlider filters={allGamesFilters} />
+          <FilterHome />
         </div>
         <div className="flex flex-col w-full h-full gap-8">
           <div className="flex items-center justify-center gap-1">
@@ -119,9 +73,7 @@ const Home = () => {
               </span>
             </div>
           </div>
-          <div>
-            <MiniSlider />
-          </div>
+          <PlaystationHome />
         </div>
 
         <div className="flex flex-col w-full h-full gap-4 justify-center">
@@ -137,11 +89,11 @@ const Home = () => {
             </div>
           </div>
           <div className="flex w-full h-full">
-            <ShowGames filters={pcGameFilters} />
+            <ShowGames filters={pcGameFilters} colNumber={6} />
           </div>
         </div>
       </div>
-      <div className="text-center text-[18px] text-white flex flex-col gap-4 px-12 pt-8 pb-4" >
+      <div className="text-center text-[18px] text-white flex flex-col gap-4 px-12 pt-8 pb-4">
         <p>
           Bu site, yalnızca eğitim ve portföy amaçlı geliştirilmiştir. Herhangi
           bir ticari gelir, satış ya da resmi temsil amacı bulunmamaktadır.
