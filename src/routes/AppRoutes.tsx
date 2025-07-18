@@ -9,17 +9,33 @@ function AppRoutes() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/playstation" element={<All name="Playstation" />} />
-          <Route path="/pc-games/all" element={<All name="Tüm Ürünler" />} />
-          <Route path="/pc-games/steam" element={<All name="Steam" />} />
-          <Route path="/pc-games/uplay" element={<All name="Uplay" />} />
+          <Route
+            path="/playstation"
+            element={<All key="playstation" category="Playstation" />}
+          />
+          <Route
+            path="/pc-games/all"
+            element={
+              <All key="all" platform="Tüm Ürünler" category="computer" />
+            }
+          />
+          <Route
+            path="/pc-games/steam"
+            element={<All key="steam" platform="Steam" category="computer" />}
+          />
+          <Route
+            path="/pc-games/uplay"
+            element={<All key="uplay" platform="Uplay" category="computer" />}
+          />
           <Route
             path="/pc-games/ea-origin"
-            element={<All name="Ea-origin" />}
+            element={<All key="origin" platform="Origin" category="computer" />}
           />
           <Route
             path="/pc-games/microsoft"
-            element={<All name="Microsoft" />}
+            element={
+              <All key="microsoft" platform="Microsoft" category="computer" />
+            }
           />
         </Route>
       </Routes>

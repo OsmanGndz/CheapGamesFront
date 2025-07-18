@@ -23,21 +23,62 @@ export const fetchGamesByCategory = async (value:string) => {
   return response.data;
 }
 
-export const fetchGamesByPlatform = async (value:string) => {
+export const fetchGamesByAllFilter = async ({
+  page,
+  pageSize,
+  Category,
+  Platform,
+  minPrice,
+  maxPrice
+}: {
+  page?: number;
+  pageSize?: number;
+  Category?: string;
+  Platform?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}) => {
 
-  if(value ==="Hepsi"){
-    const response = await api.get("/game/category",{
+  if(Platform ==="Tüm Ürünler" || Platform === "Hepsi"){
+    const response = await api.get("/game/all-filter",{
       params: {
-        categoryName: "computer"
+        Category : "computer",
+        minPrice: minPrice,
+        maxPrice: maxPrice
       }
     });
     return response.data;
   }
 
-  const response = await api.get("/game/platform", {
+  const response = await api.get("/game/all-filter", {
     params: {
-      platformName: value
+      page: page,
+      pageSize: pageSize,
+      Category : Category,
+      Platform: Platform,
+      minPrice: minPrice,
+      maxPrice: maxPrice
+
     }
   });
   return response.data;
+}
+
+export const fetchPriceRange = async (category:string, platform:string | null) =>{
+  if(platform === "Tüm Ürünler" || platform === "Hepsi"){
+    const response = await api.get("/game/priceRange", {
+    params: {
+      categoryName: "computer"
+    }
+  });
+    return response.data;
+  }
+  const response = await api.get("/game/priceRange", {
+    params: {
+      categoryName: category,
+      platformName: platform
+    }
+  });
+  return response.data;
+
 }

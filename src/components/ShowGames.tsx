@@ -3,22 +3,16 @@ import type { ShowGamesProps } from "../types/ShowGames";
 import GameCard from "./GameCard";
 import FilterGame from "./FilterGame";
 import Pagination from "./Pagination";
-import { useQuery } from "@tanstack/react-query";
-import { fetchGamesByPlatform } from "../services/GameService";
-
 
 const ShowGames: React.FC<ShowGamesProps> = ({
+  filteredData = [],
   filters = [],
   colNumber = 6,
   isPagination = false,
+  loading = false,
+  error = null,
 }) => {
   const [filter, setFilter] = useState<string>(filters[0]);
-
-  const {data, isLoading, error} = useQuery({
-    queryKey: ["games/platform", filter],
-    queryFn: async () => fetchGamesByPlatform(filter),
-    staleTime: 1000 * 60 * 30
-  })
 
   // Oyun kartına tıklandığında çalışacak fonksiyon
   const handleGameClick = () => {
@@ -39,15 +33,14 @@ const ShowGames: React.FC<ShowGamesProps> = ({
           <FilterGame filters={filters} filter={filter} setFilter={setFilter} />
         )}
       </div>
-      { isLoading && (
+      {loading && (
         <div className="flex justify-center items-center h-64">
-          <p>Loading...</p>
+          ... Yükleniyor
         </div>
       )}
-
       {error && (
-        <div className="flex justify-center items-center h-64">
-          <p>Error loading games: {error.message}</p>
+        <div className="text-red-500">
+          Hata oluştu: {error.message || "Bilinmeyen hata"}
         </div>
       )}
       <div
@@ -55,14 +48,17 @@ const ShowGames: React.FC<ShowGamesProps> = ({
           ${colNumber == 4 && "lg:grid-cols-4"}
           ${colNumber == 6 && "lg:grid-cols-6"}`}
       >
-        {data && data.slice(0, 12).map((game:any, index:any) => (
-          <GameCard
-            key={`${game.gameName}-${index}`}
-            {...game}
-            onClick={handleGameClick}
-            onAddToCart={handleAddToCart}
-          />
-        ))}
+        {filteredData &&
+          filteredData
+            .slice(0, 12)
+            .map((game: any, index: any) => (
+              <GameCard
+                key={`${game.gameName}-${index}`}
+                {...game}
+                onClick={handleGameClick}
+                onAddToCart={handleAddToCart}
+              />
+            ))}
       </div>
       {isPagination && <Pagination />}
     </div>

@@ -16,6 +16,7 @@ interface PriceFilterProps {
   initialMin?: number;
   initialMax?: number;
   maxLimit?: number;
+  minLimit?: number;
   filters?: AllFilter;
   setFilters?: React.Dispatch<React.SetStateAction<AllFilter>>;
 }
@@ -25,6 +26,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
   initialMin = 0,
   initialMax = 10000,
   maxLimit = 20000,
+  minLimit = 0,
   filters,
   setFilters,
 }) => {
@@ -49,12 +51,12 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
   };
 
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Math.min(parseInt(e.target.value), currentRange.max - 100);
+    const value = Math.min(parseInt(e.target.value), currentRange.max -20);
     updateRange({ ...currentRange, min: value });
   };
 
   const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Math.max(parseInt(e.target.value), currentRange.min + 100);
+    const value = Math.max(parseInt(e.target.value), currentRange.min + 20);
     updateRange({ ...currentRange, max: value });
   };
 
@@ -68,10 +70,6 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
     updateRange({ ...currentRange, max: value });
   };
 
-  const handleFilterReset = () => {
-    const reset = { min: initialMin, max: initialMax };
-    updateRange(reset);
-  };
 
   const [priceOpen, setPriceOpen] = useState(true);
 
@@ -96,7 +94,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
             <div className="slider-wrapper">
               <input
                 type="range"
-                min={0}
+                min={minLimit}
                 max={maxLimit}
                 value={currentRange.min}
                 onChange={handleMinChange}
@@ -104,7 +102,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
               />
               <input
                 type="range"
-                min={0}
+                min={minLimit}
                 max={maxLimit}
                 value={currentRange.max}
                 onChange={handleMaxChange}
@@ -132,15 +130,6 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
         </div>
       )}
 
-      <button onClick={() => onPriceChange(currentRange)} className="filter-button mx-2">
-        Filtrele
-      </button>
-      <button
-        onClick={handleFilterReset}
-        className="px-4 py-2 rounded-[4px] mx-2 bg-red-500 text-white cursor-pointer"
-      >
-        Filtreyi Sıfırla
-      </button>
     </div>
   );
 };
