@@ -1,29 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import type { PaginationProps } from "../types/Pagination";
 
-const Pagination = () => {
-  // Örnek oyun verisi (100+ oyun)
-  const generateGames = () => {
-    const games = [];
-    for (let i = 1; i <= 257; i++) {
-      games.push({
-        id: i,
-        name: `Oyun ${i}`,
-        category: ["Aksiyon", "Macera", "Spor", "Strateji", "Yarış"][
-          Math.floor(Math.random() * 5)
-        ],
-        rating: (Math.random() * 5).toFixed(1),
-      });
-    }
-    return games;
-  };
-
-  const [games] = useState(generateGames());
-  const [currentPage, setCurrentPage] = useState(1);
+const Pagination: React.FC<PaginationProps> = ({ pageInfo, setPageInfo }) => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const gamesPerPage = 20; // Sayfa başına oyun sayısı
 
   // Toplam sayfa sayısı
-  const totalPages = Math.ceil(games.length / gamesPerPage);
+  const totalPages = Math.ceil(
+    (pageInfo?.totalGame ?? 0) / (pageInfo?.pageSize ?? gamesPerPage)
+  );
+
+  useEffect(() => {
+    setPageInfo?.((prev) =>
+      prev
+        ? {
+            ...prev,
+            currentPage: currentPage,
+            totalGame: prev.totalGame,
+            pageSize: prev.pageSize,
+          }
+        : { currentPage, totalGame: 0, pageSize: gamesPerPage }
+    );
+  }, [currentPage]);
 
   // Görünür sayfa numaralarını hesapla
   const getVisiblePages = () => {
@@ -140,8 +139,8 @@ const Pagination = () => {
       {/* Sayfa Bilgisi */}
       <div className="mt-4 text-sm text-zinc-300">
         {(currentPage - 1) * gamesPerPage + 1} -{" "}
-        {Math.min(currentPage * gamesPerPage, games.length)} arası gösteriliyor
-        (Toplam: {games.length})
+        {Math.min(currentPage * gamesPerPage, pageInfo?.totalGame ?? 0)} arası
+        gösteriliyor (Toplam: {pageInfo?.totalGame ?? 0})
       </div>
     </div>
   );

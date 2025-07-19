@@ -5,15 +5,16 @@ import FilterGame from "./FilterGame";
 import Pagination from "./Pagination";
 
 const ShowGames: React.FC<ShowGamesProps> = ({
-  filteredData = [],
+    filteredData = [],
   filters = [],
   colNumber = 6,
   isPagination = false,
   loading = false,
   error = null,
+  pageInfo,
+  setPageInfo,
 }) => {
-  const [filter, setFilter] = useState<string>(filters[0]);
-
+const [filter, setFilter] = useState<string>(filters[0]);
   // Oyun kartına tıklandığında çalışacak fonksiyon
   const handleGameClick = () => {
     console.log("Oyun tıklandı:");
@@ -50,7 +51,6 @@ const ShowGames: React.FC<ShowGamesProps> = ({
       >
         {filteredData &&
           filteredData
-            .slice(0, 12)
             .map((game: any, index: any) => (
               <GameCard
                 key={`${game.gameName}-${index}`}
@@ -60,7 +60,9 @@ const ShowGames: React.FC<ShowGamesProps> = ({
               />
             ))}
       </div>
-      {isPagination && <Pagination />}
+      {isPagination && (
+        <Pagination pageInfo={pageInfo} setPageInfo={setPageInfo} />
+      )}
     </div>
   );
 };

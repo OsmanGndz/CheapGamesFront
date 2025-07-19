@@ -8,6 +8,7 @@ import {
   fetchPriceRange,
 } from "../services/GameService";
 import { useDebounce } from "../hooks/useDebounce";
+import type { ShowGamesProps } from "../types/ShowGames";
 
 interface PriceRange {
   min: number;
@@ -24,6 +25,13 @@ interface AllFilter {
 }
 
 const All: React.FC<AllProps> = ({ platform, category }) => {
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["priceRange", platform, category],
     queryFn: () => fetchPriceRange(category, platform || null),
@@ -51,9 +59,14 @@ const All: React.FC<AllProps> = ({ platform, category }) => {
 
   const debouncedMin = useDebounce(filters.priceRange.min, 500);
   const debouncedMax = useDebounce(filters.priceRange.max, 500);
+  const [pageInfo, setPageInfo] = useState<ShowGamesProps["pageInfo"]>({
+    currentPage: 1,
+    totalGame: 0,
+    pageSize: 12,
+  });
 
   const {
-    data: games,
+    data: game,
     isLoading: loading,
     error: err,
   } = useQuery({
@@ -63,6 +76,8 @@ const All: React.FC<AllProps> = ({ platform, category }) => {
       debouncedMin,
       debouncedMax,
       category,
+      pageInfo?.currentPage,
+      pageInfo?.pageSize,
     ],
     queryFn: async () =>
       fetchGamesByAllFilter({
@@ -70,9 +85,22 @@ const All: React.FC<AllProps> = ({ platform, category }) => {
         Platform: platform || "Hepsi",
         minPrice: debouncedMin,
         maxPrice: debouncedMax,
+        page: pageInfo?.currentPage,
+        pageSize: pageInfo?.pageSize,
       }),
     staleTime: 1000 * 5,
   });
+
+  useEffect(() => {
+    if (game) {
+      setPageInfo((prev) => ({
+        currentPage: prev?.currentPage ?? 1,
+        pageSize: prev?.pageSize ?? 12,
+        totalGame: game.totalGame || 0,
+      }));
+      handleScrollToTop();
+    }
+  }, [game]);
 
   const handlePriceChange = (priceRange: PriceRange) => {
     setFilters({ priceRange: priceRange });
@@ -109,9 +137,11 @@ const All: React.FC<AllProps> = ({ platform, category }) => {
             key={`${category}-${platform}`}
             colNumber={4}
             isPagination={true}
-            filteredData={games}
+            filteredData={game?.games || []}
             loading={loading}
             error={err}
+            pageInfo={pageInfo}
+            setPageInfo={setPageInfo}
           />
         </div>
       </div>

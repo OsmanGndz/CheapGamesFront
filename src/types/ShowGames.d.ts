@@ -17,6 +17,12 @@ export interface ShowGamesProps {
     }[];
     loading?: boolean;
     error?: any;
+    pageInfo?: {
+        currentPage: number;
+        totalGame: number;
+        pageSize: number;
+    };
+    setPageInfo?: React.Dispatch<React.SetStateAction<ShowGamesProps['pageInfo']>>;
 }
 
 export interface FilterGameProps {
