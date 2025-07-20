@@ -1,7 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import MainLayout from "../layout/MainLayout";
-import All from "../pages/All";
+import All from "../pages/ShowingGames/All";
+import GameDetails from "../pages/GameDetails";
 
 function AppRoutes() {
   return (
@@ -9,6 +10,7 @@ function AppRoutes() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/game/:id" element={<GameDetails />} />
           <Route
             path="/playstation"
             element={<All key="playstation" category="Playstation" />}

@@ -23,10 +23,12 @@ export interface ShowGamesProps {
         pageSize: number;
     };
     setPageInfo?: React.Dispatch<React.SetStateAction<ShowGamesProps['pageInfo']>>;
+    filter?: string;
+    setFilter?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface FilterGameProps {
-    filters: string[];
-    filter: string;
-    setFilter: React.Dispatch<React.SetStateAction<string>>;
+    filters?: string[];
+    filter?: string;
+    setFilter?: React.Dispatch<React.SetStateAction<string>>;
 }

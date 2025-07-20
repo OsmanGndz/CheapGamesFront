@@ -1,7 +1,8 @@
-import React from 'react';
+import React from "react";
 import { TbBasketPlus } from "react-icons/tb";
 
 interface GameCardProps {
+  Id: number;
   gameName: string;
   gameDescription: string;
   gameImage: string;
@@ -15,10 +16,11 @@ interface GameCardProps {
   width?: string;
   minWidth?: string;
   onAddToCart?: (gameData: GameCardProps) => void;
-  onClick?: (gameData: GameCardProps) => void;
+  onClick?: (gameData: number) => void;
 }
 
 const GameCard: React.FC<GameCardProps> = ({
+  Id,
   gameName,
   gameDescription,
   gameImage,
@@ -36,6 +38,7 @@ const GameCard: React.FC<GameCardProps> = ({
 }) => {
   const originalPrice = gamePrice / (1 - gameDiscount / 100);
   const gameData = {
+    Id,
     gameName,
     gameDescription,
     gameImage,
@@ -50,7 +53,7 @@ const GameCard: React.FC<GameCardProps> = ({
 
   const handleCardClick = () => {
     if (onClick) {
-      onClick(gameData);
+      onClick(Id);
     }
   };
 

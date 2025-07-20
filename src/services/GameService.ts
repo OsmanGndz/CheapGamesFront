@@ -30,13 +30,15 @@ export const fetchGamesByAllFilter = async ({
   Platform,
   minPrice,
   maxPrice,
+  sortingFilter,
 }: {
   page?: number;
   pageSize?: number;
   Category?: string;
   Platform?: string;
-  minPrice?: number;
-  maxPrice?: number;
+  minPrice?: number |null;
+  maxPrice?: number | null;
+  sortingFilter?: string;
 }) => {
 
   if (Platform ==="Tüm Ürünler" || Platform === "Hepsi"){
@@ -47,6 +49,7 @@ export const fetchGamesByAllFilter = async ({
         maxPrice: maxPrice,
         page: page,
         pageSize: pageSize,
+        sortingFilter: sortingFilter,
       }
     });
     return response.data;
@@ -60,7 +63,7 @@ export const fetchGamesByAllFilter = async ({
       Platform: Platform,
       minPrice: minPrice,
       maxPrice: maxPrice,
-
+      sortingFilter: sortingFilter,
     }
   });
   return response.data;
@@ -83,4 +86,9 @@ export const fetchPriceRange = async (category:string, platform:string | null) =
   });
   return response.data;
 
+}
+export const fetchGameById = async (id:number) =>{
+  
+  const response = await api.get("/game/" + id);
+  return response.data;
 }

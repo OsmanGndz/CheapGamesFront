@@ -3,9 +3,24 @@ import type { ShowGamesProps } from "../types/ShowGames";
 import GameCard from "./GameCard";
 import FilterGame from "./FilterGame";
 import Pagination from "./Pagination";
+import { useNavigate } from "react-router-dom";
+
+interface dataProps {
+  id: number;
+  gameName: string;
+  gameDescription: string;
+  gameImage: string;
+  gamePrice: number;
+  gameDiscount: number;
+  categoryName: string;
+  platformName: string;
+  totalSales: number;
+  isStanding: boolean;
+  releaseDate: string;
+}
 
 const ShowGames: React.FC<ShowGamesProps> = ({
-    filteredData = [],
+  filteredData,
   filters = [],
   colNumber = 6,
   isPagination = false,
@@ -13,17 +28,19 @@ const ShowGames: React.FC<ShowGamesProps> = ({
   error = null,
   pageInfo,
   setPageInfo,
+  filter,
+  setFilter,
 }) => {
-const [filter, setFilter] = useState<string>(filters[0]);
+  const navigate = useNavigate();
+
   // Oyun kartına tıklandığında çalışacak fonksiyon
-  const handleGameClick = () => {
-    console.log("Oyun tıklandı:");
-    // Burada oyun detay sayfasına yönlendirme yapabilirsiniz
+  const handleGameClick = (gameData: number) => {
+    navigate(`/game/${gameData}`);
   };
 
   // Sepete ekle butonuna tıklandığında çalışacak fonksiyon
-  const handleAddToCart = () => {
-    console.log("Sepete eklendi:");
+  const handleAddToCart = (gameData: dataProps) => {
+    console.log("Sepete eklendi:", gameData);
     // Burada sepete ekleme işlemi yapabilirsiniz
   };
 
@@ -50,15 +67,18 @@ const [filter, setFilter] = useState<string>(filters[0]);
           ${colNumber == 6 && "lg:grid-cols-6"}`}
       >
         {filteredData &&
-          filteredData
-            .map((game: any, index: any) => (
+          filteredData.map((game: any, index: any) => {
+            const { id, ...rest } = game as any;
+            return (
               <GameCard
                 key={`${game.gameName}-${index}`}
-                {...game}
+                {...rest}
+                {...(id !== undefined ? { Id: id } : {})}
                 onClick={handleGameClick}
                 onAddToCart={handleAddToCart}
               />
-            ))}
+            );
+          })}
       </div>
       {isPagination && (
         <Pagination pageInfo={pageInfo} setPageInfo={setPageInfo} />

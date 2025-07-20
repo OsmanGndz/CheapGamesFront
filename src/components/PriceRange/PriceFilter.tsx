@@ -3,12 +3,8 @@ import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import "./PriceFilter.css";
 
 interface PriceRange {
-  min: number;
-  max: number;
-}
-
-interface AllFilter {
-  priceRange: PriceRange;
+  min: number | null;
+  max: number | null;
 }
 
 interface PriceFilterProps {
@@ -17,8 +13,8 @@ interface PriceFilterProps {
   initialMax?: number;
   maxLimit?: number;
   minLimit?: number;
-  filters?: AllFilter;
-  setFilters?: React.Dispatch<React.SetStateAction<AllFilter>>;
+  filters?: PriceRange;
+  setFilters?: React.Dispatch<React.SetStateAction<PriceRange>>;
 }
 
 const PriceFilter: React.FC<PriceFilterProps> = ({
@@ -33,12 +29,12 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
   const isControlled = filters && setFilters;
 
   const getInitialRange = (): PriceRange => {
-    if (isControlled) return filters!.priceRange;
+    if (isControlled) return filters;
     return { min: initialMin, max: initialMax };
   };
 
   const [localRange, setLocalRange] = useState<PriceRange>(getInitialRange);
-  const currentRange = isControlled ? filters!.priceRange : localRange;
+  const currentRange = isControlled ? filters : localRange;
 
   // Local state güncellenip dışarıya bildirilir
   const updateRange = (range: PriceRange) => {
@@ -51,12 +47,12 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
   };
 
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Math.min(parseInt(e.target.value), currentRange.max -20);
+    const value = Math.min(parseInt(e.target.value), currentRange?.max ?? 5000 - 20);
     updateRange({ ...currentRange, min: value });
   };
 
   const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Math.max(parseInt(e.target.value), currentRange.min + 20);
+    const value = Math.max(parseInt(e.target.value), currentRange?.min ?? 0 + 20);
     updateRange({ ...currentRange, max: value });
   };
 
@@ -69,7 +65,6 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
     const value = parseInt(e.target.value) || 0;
     updateRange({ ...currentRange, max: value });
   };
-
 
   const [priceOpen, setPriceOpen] = useState(true);
 
@@ -96,7 +91,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
                 type="range"
                 min={minLimit}
                 max={maxLimit}
-                value={currentRange.min}
+                value={currentRange?.min ?? 0}
                 onChange={handleMinChange}
                 className="slider slider-min"
               />
@@ -104,7 +99,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
                 type="range"
                 min={minLimit}
                 max={maxLimit}
-                value={currentRange.max}
+                value={currentRange?.max ?? 5000}
                 onChange={handleMaxChange}
                 className="slider slider-max"
               />
@@ -115,21 +110,20 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
             <input
               type="number"
               placeholder="En düşük fiyat"
-              value={currentRange.min}
+              value={currentRange?.min ?? 0 }
               onChange={handleManualMinChange}
               className="price-input"
             />
             <input
               type="number"
               placeholder="En yüksek fiyat"
-              value={currentRange.max}
+              value={currentRange?.max ?? 5000}
               onChange={handleManualMaxChange}
               className="price-input"
             />
           </div>
         </div>
       )}
-
     </div>
   );
 };

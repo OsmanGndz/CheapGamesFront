@@ -7,7 +7,9 @@ const FilterGame: React.FC<FilterGameProps> = ({
   setFilter,
 }) => {
   const handleFilterChange = (selectedFilter: string) => {
-    setFilter(selectedFilter);
+    if (setFilter) {
+      setFilter(selectedFilter);
+    }
   };
 
   return (

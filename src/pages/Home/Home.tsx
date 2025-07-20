@@ -5,9 +5,9 @@ import yanslide3 from "../../assets/Yanslides/yanslide3.jpg";
 import { FaArrowRight } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import ShowGames from "../../components/ShowGames";
 import FilterHome from "./FilterHome";
 import PlaystationHome from "./PlaystationHome";
+import PCGames from "./PCGames";
 
 const yanSlides = [
   {
@@ -26,8 +26,6 @@ const yanSlides = [
     imageUrl: yanslide3,
   },
 ];
-
-const pcGameFilters = ["Hepsi", "Steam", "Origin", "Uplay", "Microsoft"];
 const Home = () => {
   const navigate = useNavigate();
 
@@ -89,7 +87,7 @@ const Home = () => {
             </div>
           </div>
           <div className="flex w-full h-full">
-            <ShowGames filters={pcGameFilters} colNumber={6} />
+            <PCGames />
           </div>
         </div>
       </div>
