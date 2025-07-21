@@ -39,6 +39,10 @@ function AppRoutes() {
               <All key="microsoft" platform="Microsoft" category="computer" />
             }
           />
+          <Route
+            path="/discounts"
+            element={<All key="discounts" discounts={true} />}
+          />
         </Route>
       </Routes>
     </>

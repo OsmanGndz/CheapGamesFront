@@ -11,7 +11,7 @@ const PCGames = () => {
     queryFn: () =>
       fetchGamesByAllFilter({
         Category: "computer",
-        Platform: filter,
+        Platform: filter === "Hepsi" ? "Tüm Ürünler" : filter,
         pageSize: 12,
       }),
     staleTime: 1000 * 60 * 30, // 5 minutes

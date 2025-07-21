@@ -19,10 +19,11 @@ interface PriceRange {
 
 interface AllProps {
   platform?: string;
-  category: string;
+  category?: string;
+  discounts?: boolean;
 }
 
-const All: React.FC<AllProps> = ({ platform, category }) => {
+const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isInitialized, setIsInitialized] = useState(false);
   const [shouldUpdateUrl, setShouldUpdateUrl] = useState(false);
@@ -50,8 +51,9 @@ const All: React.FC<AllProps> = ({ platform, category }) => {
   const urlParams = getUrlParams();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["priceRange", platform, category],
-    queryFn: () => fetchPriceRange(category, platform || null),
+    queryKey: ["priceRange", platform, category, discounts],
+    queryFn: () =>
+      fetchPriceRange(category || null, platform || null, discounts),
     staleTime: 1000 * 60 * 30,
   });
 
@@ -110,16 +112,18 @@ const All: React.FC<AllProps> = ({ platform, category }) => {
       pageInfo?.currentPage,
       pageInfo?.pageSize,
       sortFilter?.sortingFilter,
+      discounts,
     ],
     queryFn: async () =>
       fetchGamesByAllFilter({
         Category: category,
-        Platform: platform || "Hepsi",
+        Platform: platform,
         minPrice: debouncedMin,
         maxPrice: debouncedMax,
         page: pageInfo?.currentPage,
         pageSize: pageInfo?.pageSize,
         sortingFilter: sortFilter.sortingFilter,
+        discount: discounts,
       }),
     staleTime: 1000 * 5,
     enabled: isInitialized,
@@ -148,12 +152,12 @@ const All: React.FC<AllProps> = ({ platform, category }) => {
 
     const newParams = new URLSearchParams();
 
-    newParams.set("category", category);
+    newParams.set("category", category || "");
     if (platform) newParams.set("platform", platform);
     newParams.set("sort", sortFilter.sortingFilter);
     newParams.set("page", String(pageInfo?.currentPage || 1));
     newParams.set("pageSize", String(sortFilter?.pageSizeFilter || 12));
-    newParams.set("minPrice", String(filters.min));
+    newParams.set("minPrice", String(filters.min) || "0");
     newParams.set("maxPrice", String(filters.max));
 
     setSearchParams(newParams, { replace: true });
