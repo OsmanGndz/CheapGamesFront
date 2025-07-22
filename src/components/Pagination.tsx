@@ -3,12 +3,13 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import type { PaginationProps } from "../types/Pagination";
 
 const Pagination: React.FC<PaginationProps> = ({ pageInfo, setPageInfo }) => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const gamesPerPage = 20; // Sayfa başına oyun sayısı
+  const [currentPage, setCurrentPage] = useState<number>(
+    pageInfo?.currentPage || 1
+  );
 
   // Toplam sayfa sayısı
   const totalPages = Math.ceil(
-    (pageInfo?.totalGame ?? 0) / (pageInfo?.pageSize ?? gamesPerPage)
+    (pageInfo?.totalGame ?? 0) / (pageInfo?.pageSize ?? 12)
   );
 
   useEffect(() => {
@@ -20,9 +21,10 @@ const Pagination: React.FC<PaginationProps> = ({ pageInfo, setPageInfo }) => {
             totalGame: prev.totalGame,
             pageSize: prev.pageSize,
           }
-        : { currentPage, totalGame: 0, pageSize: gamesPerPage }
+        : { currentPage, totalGame: 0, pageSize: 12 }
     );
   }, [currentPage]);
+
 
   // Görünür sayfa numaralarını hesapla
   const getVisiblePages = () => {
@@ -138,9 +140,12 @@ const Pagination: React.FC<PaginationProps> = ({ pageInfo, setPageInfo }) => {
 
       {/* Sayfa Bilgisi */}
       <div className="mt-4 text-sm text-zinc-300">
-        {(currentPage - 1) * gamesPerPage + 1} -{" "}
-        {Math.min(currentPage * gamesPerPage, pageInfo?.totalGame ?? 0)} arası
-        gösteriliyor (Toplam: {pageInfo?.totalGame ?? 0})
+        {(currentPage - 1) * (pageInfo?.pageSize || 12) + 1} -{" "}
+        {Math.min(
+          currentPage * (pageInfo?.pageSize || 12),
+          pageInfo?.totalGame ?? 0
+        )}{" "}
+        arası gösteriliyor (Toplam: {pageInfo?.totalGame ?? 0})
       </div>
     </div>
   );

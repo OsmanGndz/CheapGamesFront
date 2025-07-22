@@ -3,6 +3,7 @@ import type { MiniSliderProps } from "../types/MiniSlider";
 import GameCard from "./GameCard";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Spinner from "./Spinner";
 
 interface dataProps {
   id: number;
@@ -97,7 +98,7 @@ const MiniSlider: React.FC<MiniSliderProps> = ({ isloading, error, data }) => {
 
   if (isloading) {
     return (
-      <p className="flex w-full items-center justify-center">...Yükleniyor</p>
+      <Spinner className="flex justify-center items-center w-full" color="fill-blue-400" size="w-10 h-10"/>
     );
   }
   if (error) {

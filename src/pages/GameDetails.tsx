@@ -4,6 +4,7 @@ import { fetchGameById } from "../services/GameService";
 import { useState } from "react";
 import { FaArrowDown, FaHeart } from "react-icons/fa";
 import { TbBasketPlus } from "react-icons/tb";
+import Spinner from "../components/Spinner";
 
 const GameDetails = () => {
   const { id } = useParams();
@@ -15,19 +16,25 @@ const GameDetails = () => {
   });
 
   return (
-    <div className="flex flex-col px-40">
-      {isLoading && <p>Loading...</p>}
+    <div className="flex flex-col px-0 sm:px-8 md:px-20 lg:px-32 xl:px-40 py-4">
+      {isLoading && (
+        <Spinner
+          className="flex justify-center items-center w-full"
+          color="fill-blue-400"
+          size="w-10 h-10"
+        />
+      )}
       {error && <p>Error loading game details: {error.message}</p>}
       {data && (
         <div className="flex flex-col p-4 gap-8">
           {/*game name*/}
           <div className="flex flex-col items-center justify-center gap-1">
-            <h1 className="text-2xl font-bold">{data?.gameName}</h1>
+            <h1 className="text-3xl font-bold">{data?.gameName}</h1>
             <hr className="w-12 border-1 text-blue-400" />
           </div>
-          <div className="flex w-full gap-8">
-            <div className="flex flex-col gap-4 w-[40%]">
-              <div className="flex w-full max-h-[600px] items-center justify-center">
+          <div className="flex flex-col sm:flex-row justify-center items-center  sm:justify-start sm:items-start w-full gap-8">
+            <div className="flex flex-col gap-4 w-full sm:w-[40%]">
+              <div className="flex w-full aspect-video items-center justify-center">
                 <img
                   src={data?.gameImage}
                   alt={data?.gameName}
@@ -35,7 +42,7 @@ const GameDetails = () => {
                   className="w-full h-auto object-cover rounded-lg shadow-md shadow-blue-400/50"
                 />
               </div>
-              <div className="w-full flex flex-col gap-1 justify-center items-center relative">
+              <div className="w-full hidden sm:flex flex-col gap-1 justify-center items-center relative">
                 <h2 className="text-lg font-semibold">Ürün Tanıtımı</h2>
                 <hr className="w-12 border-1 text-blue-400" />
                 <div
@@ -62,7 +69,7 @@ const GameDetails = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-col gap-4 w-[60%] mt-8">
+            <div className="flex flex-col gap-4 w-full sm:w-[60%] mt-8">
               <div className="flex items-center w-full font-bold bg-slate-800 rounded-md p-4 gap-2">
                 <span className="text-2xl text-white whitespace-nowrap">
                   {data.gamePrice === 0
@@ -101,6 +108,32 @@ const GameDetails = () => {
                 </button>
               </div>
             </div>
+          </div>
+          <div className="w-full flex sm:hidden flex-col gap-1 justify-center items-center relative">
+            <h2 className="text-lg font-semibold">Ürün Tanıtımı</h2>
+            <hr className="w-12 border-1 text-blue-400" />
+            <div
+              className={`text-zinc-100 text-sm p-2 ${
+                (data.gameDescription?.length || 0) > 200 && showMore
+                  ? "h-auto"
+                  : "h-20"
+              } overflow-hidden transition-all duration-300 shadow-md shadow-blue-400/50`}
+            >
+              {data?.gameDescription}
+            </div>
+            {(data.gameDescription?.length || 0) > 200 && (
+              <button
+                className="flex items-center text-black gap-1 px-2 cursor-pointer mt-2 bg-zinc-300 absolute -bottom-5"
+                onClick={() => setShowMore(!showMore)}
+              >
+                {showMore ? (
+                  <FaArrowDown className="rotate-180" />
+                ) : (
+                  <FaArrowDown />
+                )}
+                {showMore ? "Daha Az Göster" : "Daha Fazla Göster"}
+              </button>
+            )}
           </div>
         </div>
       )}

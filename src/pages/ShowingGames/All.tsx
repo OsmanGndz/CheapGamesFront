@@ -11,6 +11,7 @@ import { useDebounce } from "../../hooks/useDebounce";
 import type { ShowGamesProps } from "../../types/ShowGames";
 import SortFilter from "./SortFilter";
 import { useSearchParams } from "react-router-dom";
+import Spinner from "../../components/Spinner";
 
 interface PriceRange {
   min: number | null;
@@ -140,6 +141,16 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
     }
   }, [gameData]);
 
+  useEffect(()=>{
+    setPageInfo(
+      {
+        currentPage: 1,
+        pageSize: sortFilter.pageSizeFilter,
+        totalGame: gameData?.totalGame || 0
+      }
+    )
+  },[sortFilter,filters])
+
   const handlePriceChange = (priceRange: PriceRange) => {
     setFilters(priceRange);
     setShouldUpdateUrl(true);
@@ -202,7 +213,11 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
   return (
     <div className="flex w-full md:px-12 lg:px-20 xl:px-24 bg-gray-900 text-white min-h-screen gap-4">
       {isLoading || !data ? (
-        <div>Loading...</div>
+        <Spinner
+          className="flex justify-center w-[30%] pt-20"
+          color="fill-blue-400"
+          size="w-8 h-8"
+        />
       ) : (
         <div className="hidden md:flex w-[30%] xl:w-[20%] flex-col gap-3">
           <h1 className="text-[25px] font-semibold">{platform}</h1>

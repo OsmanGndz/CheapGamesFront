@@ -4,6 +4,7 @@ import GameCard from "./GameCard";
 import FilterGame from "./FilterGame";
 import Pagination from "./Pagination";
 import { useNavigate } from "react-router-dom";
+import Spinner from "./Spinner";
 
 interface dataProps {
   id: number;
@@ -52,13 +53,15 @@ const ShowGames: React.FC<ShowGamesProps> = ({
         )}
       </div>
       {loading && (
-        <div className="flex justify-center items-center h-64">
-          ... Yükleniyor
-        </div>
+        <Spinner
+          className="flex justify-center items-center w-full"
+          color="fill-blue-400"
+          size="w-10 h-10"
+        />
       )}
       {error && (
-        <div className="text-red-500">
-          Hata oluştu: {error.message || "Bilinmeyen hata"}
+        <div className="flex justify-center items-center w-full text-red-500">
+          Error: {error.message || "Bilinmeyen hata"}
         </div>
       )}
       <div
@@ -81,7 +84,11 @@ const ShowGames: React.FC<ShowGamesProps> = ({
           })}
       </div>
       {isPagination && (
-        <Pagination pageInfo={pageInfo} setPageInfo={setPageInfo} />
+        <Pagination
+          key={`${pageInfo?.pageSize} - ${pageInfo?.currentPage} - ${pageInfo?.totalGame} `}
+          pageInfo={pageInfo}
+          setPageInfo={setPageInfo}
+        />
       )}
     </div>
   );
