@@ -10,6 +10,8 @@ import { IoMenu } from "react-icons/io5";
 import type { NavbarProps } from "../types/Navbar";
 import { useQuery } from "@tanstack/react-query";
 import { fetchSearchedGames } from "../services/GameService";
+import { useUser } from "../Context/UserContext";
+import { CiLogout } from "react-icons/ci";
 
 const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const desktopSearchRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated, logout } = useUser();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["searchGames", search],
@@ -81,14 +84,34 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
           </div>
         </div>
         <div className="flex lg:hidden gap-4 items-center justify-center px-2 py-3 ">
-          <div className="flex gap-1 cursor-pointer hover:text-blue-400">
-            <LuUserRoundCheck className="text-xl text-blue-400" />
-            <p>Giriş Yap</p>
-          </div>
-          <div className="flex gap-1 cursor-pointer hover:text-blue-400">
-            <FaUserPlus className="text-xl text-blue-400" />
-            <p>Kayıt Ol</p>
-          </div>
+          {!isAuthenticated ? (
+            <button
+              className="flex gap-1 cursor-pointer hover:text-blue-400"
+              onClick={() => navigate("/login")}
+            >
+              <LuUserRoundCheck className="text-xl text-blue-400" />
+              <p>Giriş Yap</p>
+            </button>
+          ) : (
+            <button
+              className="flex gap-1 cursor-pointer hover:text-blue-400"
+              onClick={() => navigate("/login")}
+            >
+              <LuUserRoundCheck className="text-lg text-blue-400" />
+              <p>Hesabım</p>
+            </button>
+          )}
+          {!isAuthenticated ? (
+            <button className="flex gap-1 cursor-pointer hover:text-blue-400">
+              <FaUserPlus className="text-xl text-blue-400" />
+              <p>Kayıt Ol</p>
+            </button>
+          ) : (
+            <button className="flex gap-1 cursor-pointer hover:text-blue-400" onClick = {logout}>
+              <CiLogout className="text-lg text-blue-400" />
+              <p>Çıkış Yap</p>
+            </button>
+          )}
           <div className="flex gap-1">
             <ImCreditCard className="text-xl text-blue-400" />
             <p>Bakiye Yükle</p>
@@ -163,10 +186,17 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
             </div>
           </div>
           <div className="flex gap-4 items-center">
-            <div className="flex gap-1 items-center cursor-pointer bg-blue-400 p-1 rounded-lg ">
-              <FaUser />
-              <p>Giriş / Kayıt</p>
-            </div>
+            {!isAuthenticated ? (
+              <button
+                className="flex gap-1 items-center cursor-pointer bg-blue-400 p-1 rounded-lg"
+                onClick={() => navigate("/login")}
+              >
+                <FaUser />
+                <p>Giriş / Kayıt</p>
+              </button>
+            ) : (
+              <FaUser className="text-xl text-blue-400" />
+            )}
             <div>
               <LuShoppingBasket className="text-[26px]" />
             </div>
@@ -202,10 +232,10 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
               </div>
             </div>
           </div>
-          
+
           {/* MOBİL ARAMA ÇUBUĞU - Tamamen Yeniden Düzenlendi */}
           {isSearchBarOpen && (
-            <div 
+            <div
               className="absolute top-full left-0 right-0 z-50 px-2"
               ref={searchRef}
             >
@@ -221,14 +251,14 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                 />
                 <IoMdSearch className="text-blue-400 text-[22px]" />
               </div>
-              
+
               {/* Arama Sonuçları */}
               {search.length > 0 && (
-                <div className={`${
-                  data?.games?.length > 0 
-                    ? "h-[250px]" 
-                    : "h-[50px]"
-                } w-full bg-zinc-200 rounded-lg p-2 border-2 border-blue-400 text-black shadow-lg`}>
+                <div
+                  className={`${
+                    data?.games?.length > 0 ? "h-[250px]" : "h-[50px]"
+                  } w-full bg-zinc-200 rounded-lg p-2 border-2 border-blue-400 text-black shadow-lg`}
+                >
                   {isLoading ? (
                     <p className="text-center py-4">Loading...</p>
                   ) : error ? (
@@ -249,14 +279,20 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                                 className="w-12 h-12 object-cover rounded"
                               />
                               <div className="flex flex-col justify-center flex-1 min-w-0">
-                                <h3 className="font-bold text-sm truncate">{game.gameName}</h3>
-                                <p className="text-gray-600 text-xs">{game.gamePrice} TL</p>
+                                <h3 className="font-bold text-sm truncate">
+                                  {game.gameName}
+                                </h3>
+                                <p className="text-gray-600 text-xs">
+                                  {game.gamePrice} TL
+                                </p>
                               </div>
                             </li>
                           ))}
                         </ul>
                       ) : (
-                        <p className="text-center py-4">Arama sonuç bulunamadı</p>
+                        <p className="text-center py-4">
+                          Arama sonuç bulunamadı
+                        </p>
                       )}
                     </div>
                   )}

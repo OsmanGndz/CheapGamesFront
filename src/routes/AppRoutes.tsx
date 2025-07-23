@@ -3,8 +3,14 @@ import Home from "../pages/Home/Home";
 import MainLayout from "../layout/MainLayout";
 import All from "../pages/ShowingGames/All";
 import GameDetails from "../pages/GameDetails";
+import Login from "../pages/Login/Login";
+import AuthLayout from "../layout/AuthLayout";
+import { useUser } from "../Context/UserContext";
+import Register from "../pages/Register/Register";
 
 function AppRoutes() {
+  const { isAuthenticated } = useUser();
+
   return (
     <>
       <Routes>
@@ -44,6 +50,12 @@ function AppRoutes() {
             element={<All key="discounts" discounts={true} />}
           />
         </Route>
+        {!isAuthenticated && (
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register/>} />
+          </Route>
+        )}
       </Routes>
     </>
   );

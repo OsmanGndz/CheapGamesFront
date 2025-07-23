@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { fetchGameById } from "../services/GameService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowDown, FaHeart } from "react-icons/fa";
 import { TbBasketPlus } from "react-icons/tb";
 import Spinner from "../components/Spinner";
@@ -14,6 +14,10 @@ const GameDetails = () => {
     queryFn: () => fetchGameById(Number(id)),
     enabled: !!id, // Only run the query if id is available
   });
+
+  useEffect(()=>{
+    window.scrollTo(0,0);
+  },[])
 
   return (
     <div className="flex flex-col px-0 sm:px-8 md:px-20 lg:px-32 xl:px-40 py-4">
