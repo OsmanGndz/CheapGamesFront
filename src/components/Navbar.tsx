@@ -12,6 +12,36 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchSearchedGames } from "../services/GameService";
 import { useUser } from "../Context/UserContext";
 import { CiLogout } from "react-icons/ci";
+import { MdFavorite, MdManageAccounts } from "react-icons/md";
+import { FaClockRotateLeft } from "react-icons/fa6";
+
+// Hesabım, siparişlerim, favorilerim, çıkış yap
+const accountMenuValues = [
+  {
+    id: 1,
+    icon: <MdManageAccounts className="text-lg" />,
+    value: "Hesabım",
+    url: "/account",
+  },
+  {
+    id: 2,
+    icon: <FaClockRotateLeft className="text-lg" />,
+    value: "Siparişlerim",
+    url: "/orders",
+  },
+  {
+    id: 3,
+    icon: <MdFavorite className="text-lg" />,
+    value: "Favorilerim",
+    url: "/favories",
+  },
+  {
+    id: 4,
+    icon: <CiLogout className="text-lg" />,
+    value: "Çıkış Yap",
+    url: "/",
+  },
+];
 
 const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
   const navigate = useNavigate();
@@ -19,7 +49,9 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const desktopSearchRef = useRef<HTMLDivElement>(null);
+  const personMenuRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, logout } = useUser();
+  const [isPersonMenuOpen, setIsPersonMenuOpen] = useState<boolean>(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["searchGames", search],
@@ -47,6 +79,13 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
       ) {
         setSearch("");
       }
+
+      if (
+        personMenuRef.current &&
+        !personMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsPersonMenuOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -64,6 +103,9 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
     navigate(`/game/${gameId}`);
     setSearch("");
     setIsSearchBarOpen(false); // Mobilde arama çubuğunu da kapat
+  };
+  const handlePersonMenu = () => {
+    setIsPersonMenuOpen(!isPersonMenuOpen);
   };
 
   return (
@@ -84,7 +126,15 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
           </div>
         </div>
         <div className="flex lg:hidden gap-4 items-center justify-center px-2 py-3 ">
-          {!isAuthenticated ? (
+          {isAuthenticated ? (
+            <button
+              className="flex gap-1 cursor-pointer hover:text-blue-400"
+              onClick={handlePersonMenu}
+            >
+              <LuUserRoundCheck className="text-lg text-blue-400" />
+              <p>Hesabım</p>
+            </button>
+          ) : (
             <button
               className="flex gap-1 cursor-pointer hover:text-blue-400"
               onClick={() => navigate("/login")}
@@ -92,24 +142,19 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
               <LuUserRoundCheck className="text-xl text-blue-400" />
               <p>Giriş Yap</p>
             </button>
-          ) : (
+          )}
+          {isAuthenticated ? (
             <button
               className="flex gap-1 cursor-pointer hover:text-blue-400"
-              onClick={() => navigate("/login")}
+              onClick={logout}
             >
-              <LuUserRoundCheck className="text-lg text-blue-400" />
-              <p>Hesabım</p>
+              <CiLogout className="text-lg text-blue-400" />
+              <p>Çıkış Yap</p>
             </button>
-          )}
-          {!isAuthenticated ? (
+          ) : (
             <button className="flex gap-1 cursor-pointer hover:text-blue-400">
               <FaUserPlus className="text-xl text-blue-400" />
               <p>Kayıt Ol</p>
-            </button>
-          ) : (
-            <button className="flex gap-1 cursor-pointer hover:text-blue-400" onClick = {logout}>
-              <CiLogout className="text-lg text-blue-400" />
-              <p>Çıkış Yap</p>
             </button>
           )}
           <div className="flex gap-1">
@@ -185,8 +230,31 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
               )}
             </div>
           </div>
-          <div className="flex gap-4 items-center">
-            {!isAuthenticated ? (
+          <div className="flex gap-4">
+            {isAuthenticated ? (
+              <div ref={personMenuRef} className="flex flex-col items-center justify-center relative ">
+                <button
+                  className="cursor-pointer text-blue-400 hover:text-blue-500"
+                  onClick={handlePersonMenu}
+                >
+                  <FaUser className="text-xl" />
+                </button>
+                {isPersonMenuOpen && (
+                  <ul className="absolute right-0 top-full bg-zinc-300 w-[150px] text-black p-2 rounded-md z-60">
+                    {accountMenuValues.map((item, idx) => (
+                      <li
+                        key={`${idx} - ${item.value}`}
+                        className="flex items-center gap-2 w-full h-full cursor-pointer hover:bg-blue-400 p-2 rounded-md"
+                        onClick={() => navigate(item.url)}
+                      >
+                        {item.icon}
+                        <p>{item.value}</p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ) : (
               <button
                 className="flex gap-1 items-center cursor-pointer bg-blue-400 p-1 rounded-lg"
                 onClick={() => navigate("/login")}
@@ -194,8 +262,6 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                 <FaUser />
                 <p>Giriş / Kayıt</p>
               </button>
-            ) : (
-              <FaUser className="text-xl text-blue-400" />
             )}
             <div>
               <LuShoppingBasket className="text-[26px]" />

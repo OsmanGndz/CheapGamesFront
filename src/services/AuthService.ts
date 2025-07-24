@@ -45,3 +45,51 @@ export const register = async ({
     throw error;
   }
 };
+
+export const fetchMe = async ()=>{
+
+    try {
+    const response = await api.get("/auth/me");
+    return response.data;
+  } catch (error) {
+    console.error("Login failed:", error);
+    throw error;
+  }
+}
+interface UpdateData {
+  name: string;
+  surname: string;
+  email: string;
+}
+export const UpdateUserInformation = async ({ name, surname, email }:UpdateData)=>{
+  try{
+    const response = await api.put("/auth/me",{
+      name : name,
+      surname: surname,
+      email: email
+    })
+    return response.data
+  }catch(error){
+    console.error("Login failed:", error);
+    throw error;
+  }
+
+}
+interface ChangePasswordProp {
+  password: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+export const ChangePasswordRequest = async ({password, newPassword, confirmPassword}:ChangePasswordProp)=>{
+try{
+    const response = await api.put("/auth/change-password",{
+      password : password,
+      newPassword: newPassword,
+      passwordConfirmation: confirmPassword
+    })
+    return response.data
+  }catch(error){
+    console.error("Login failed:", error);
+    throw error;
+  }
+}

@@ -7,6 +7,7 @@ import Login from "../pages/Login/Login";
 import AuthLayout from "../layout/AuthLayout";
 import { useUser } from "../Context/UserContext";
 import Register from "../pages/Register/Register";
+import Account from "../pages/Account/Account";
 
 function AppRoutes() {
   const { isAuthenticated } = useUser();
@@ -53,7 +54,12 @@ function AppRoutes() {
         {!isAuthenticated && (
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register/>} />
+            <Route path="/register" element={<Register />} />
+          </Route>
+        )}
+        {isAuthenticated && (
+          <Route element={<AuthLayout />}>
+            <Route path="/account" element={<Account />} />
           </Route>
         )}
       </Routes>
