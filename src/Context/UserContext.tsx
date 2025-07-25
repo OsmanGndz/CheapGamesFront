@@ -1,13 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import {jwtDecode} from "jwt-decode";
 
-interface User {
-  id: number;
-  email: string;
-  name: string;
-  surname: string;
-  token: string;
-}
 
 interface DecodedToken {
   exp: number;
@@ -15,8 +8,8 @@ interface DecodedToken {
 }
 
 interface UserContextType {
-  user: User | null;
-  Login: (userData: User) => void;
+  token: string | null;
+  Login: (token:string) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -26,7 +19,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   // Token süresini kontrol et ve süresi dolmuşsa logout yap
   const checkTokenExpiration = (token: string) => {
@@ -48,30 +41,30 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser: User = JSON.parse(storedUser);
-      checkTokenExpiration(parsedUser.token);
-      setUser(parsedUser);
+    const stroredToken = localStorage.getItem("token");
+    if (stroredToken) {
+      const parsedToken: string = JSON.parse(stroredToken);
+      checkTokenExpiration(parsedToken);
+      setToken(parsedToken);
     }
   }, []);
 
-  const Login = (userData: User) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    checkTokenExpiration(userData.token);
-    setUser(userData);
+  const Login = (token: string) => {
+    localStorage.setItem("token", JSON.stringify(token));
+    checkTokenExpiration(token);
+    setToken(token);
   };
 
   const logout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
+    localStorage.removeItem("token");
+    setToken(null);
   };
 
   const value: UserContextType = {
-    user,
+    token,
     Login,
     logout,
-    isAuthenticated: !!user,
+    isAuthenticated: !!token,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

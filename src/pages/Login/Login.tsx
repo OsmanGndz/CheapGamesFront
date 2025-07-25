@@ -16,14 +16,8 @@ const Login = () => {
 
     try {
       const response = await login(email, password);
-      const userData = {
-        id: response.user.id,
-        name: response.user.name,
-        surname: response.user.surname,
-        email: response.user.email,
-        token: response.token,
-      };
-      Login(userData);
+      const token = response.token;
+      Login(token);
 
       navigate("/");
     } catch (err) {
