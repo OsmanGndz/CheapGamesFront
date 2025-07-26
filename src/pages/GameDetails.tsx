@@ -5,19 +5,26 @@ import { useEffect, useState } from "react";
 import { FaArrowDown, FaHeart } from "react-icons/fa";
 import { TbBasketPlus } from "react-icons/tb";
 import Spinner from "../components/Spinner";
+import { useBasket } from "../Context/BasketContext";
 
 const GameDetails = () => {
   const { id } = useParams();
   const [showMore, setShowMore] = useState(false);
+  const { AddToBasket } = useBasket();
   const { data, error, isLoading } = useQuery({
     queryKey: ["gameDetails", id],
     queryFn: () => fetchGameById(Number(id)),
     enabled: !!id, // Only run the query if id is available
   });
 
-  useEffect(()=>{
-    window.scrollTo(0,0);
-  },[])
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleBasket = () => {
+    console.log(data);
+    AddToBasket({ ...data, Id: data.id });
+  };
 
   return (
     <div className="flex flex-col px-0 sm:px-8 md:px-20 lg:px-32 xl:px-40 py-4">
@@ -102,7 +109,10 @@ const GameDetails = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button className="flex justify-center items-center gap-2 w-full bg-blue-400 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300">
+                <button
+                  className="flex justify-center items-center gap-2 w-full bg-blue-400 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300"
+                  onClick={handleBasket}
+                >
                   <TbBasketPlus className="text-lg sm:text-xl text-white" />
                   Sepete Ekle
                 </button>

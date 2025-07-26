@@ -27,7 +27,7 @@ const accountMenuValues = [
     id: 2,
     icon: <FaClockRotateLeft className="text-lg" />,
     value: "Siparişlerim",
-    url: "/orders",
+    url: "/my-orders",
   },
   {
     id: 3,
@@ -232,7 +232,10 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
           </div>
           <div className="flex gap-4">
             {isAuthenticated ? (
-              <div ref={personMenuRef} className="flex flex-col items-center justify-center relative ">
+              <div
+                ref={personMenuRef}
+                className="flex flex-col items-center justify-center relative "
+              >
                 <button
                   className="cursor-pointer text-blue-400 hover:text-blue-500"
                   onClick={handlePersonMenu}
@@ -256,16 +259,16 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
               </div>
             ) : (
               <button
-                className="flex gap-1 items-center cursor-pointer bg-blue-400 p-1 rounded-lg"
+                className="flex gap-1 items-center cursor-pointer bg-blue-400 hover:bg-blue-500 p-1 rounded-lg"
                 onClick={() => navigate("/login")}
               >
                 <FaUser />
                 <p>Giriş / Kayıt</p>
               </button>
             )}
-            <div>
-              <LuShoppingBasket className="text-[26px]" />
-            </div>
+            <button className="cursor-pointer" onClick={()=>navigate("/basket")}>
+              <LuShoppingBasket className="text-[26px] hover:text-blue-400" />
+            </button>
           </div>
         </div>
         {/* MOBİL NAVBAR - Düzeltilmiş Kısım */}
@@ -292,11 +295,12 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                 onClick={() => setIsSearchBarOpen(!isSearchBarOpen)}
               />
             </div>
-            <div className="flex gap-4 items-center">
-              <div>
-                <LuShoppingBasket className="text-[30px]" />
-              </div>
-            </div>
+            <button
+              className="flex gap-4 items-center cursor-pointer"
+              onClick={() => navigate("/basket")}
+            >
+              <LuShoppingBasket className="text-[30px]" />
+            </button>
           </div>
 
           {/* MOBİL ARAMA ÇUBUĞU - Tamamen Yeniden Düzenlendi */}

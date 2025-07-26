@@ -5,6 +5,7 @@ import FilterGame from "./FilterGame";
 import Pagination from "./Pagination";
 import { useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
+import { useBasket } from "../Context/BasketContext";
 
 interface dataProps {
   id: number;
@@ -33,6 +34,7 @@ const ShowGames: React.FC<ShowGamesProps> = ({
   setFilter,
 }) => {
   const navigate = useNavigate();
+  const { AddToBasket } = useBasket();
 
   // Oyun kartına tıklandığında çalışacak fonksiyon
   const handleGameClick = (gameData: number) => {
@@ -41,8 +43,7 @@ const ShowGames: React.FC<ShowGamesProps> = ({
 
   // Sepete ekle butonuna tıklandığında çalışacak fonksiyon
   const handleAddToCart = (gameData: dataProps) => {
-    console.log("Sepete eklendi:", gameData);
-    // Burada sepete ekleme işlemi yapabilirsiniz
+    AddToBasket(gameData);
   };
 
   return (

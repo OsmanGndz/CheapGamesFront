@@ -4,9 +4,10 @@ import GameCard from "./GameCard";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
+import { useBasket } from "../Context/BasketContext";
 
 interface dataProps {
-  id: number;
+  Id: number;
   gameName: string;
   gameDescription: string;
   gameImage: string;
@@ -24,6 +25,7 @@ const MiniSlider: React.FC<MiniSliderProps> = ({ isloading, error, data }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState<number>(1);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { AddToBasket } = useBasket();
 
   const getVisibleCards = () => {
     if (typeof window === "undefined") return 1;
@@ -92,13 +94,16 @@ const MiniSlider: React.FC<MiniSliderProps> = ({ isloading, error, data }) => {
 
   // Sepete ekle butonuna tıklandığında çalışacak fonksiyon
   const handleAddToCart = (gameData: dataProps) => {
-    console.log("Sepete eklendi:", gameData);
-    // Burada sepete ekleme işlemi yapabilirsiniz
+    AddToBasket(gameData);
   };
 
   if (isloading) {
     return (
-      <Spinner className="flex justify-center items-center w-full" color="fill-blue-400" size="w-10 h-10"/>
+      <Spinner
+        className="flex justify-center items-center w-full"
+        color="fill-blue-400"
+        size="w-10 h-10"
+      />
     );
   }
   if (error) {

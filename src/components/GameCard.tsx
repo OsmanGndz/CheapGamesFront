@@ -107,10 +107,10 @@ const GameCard: React.FC<GameCardProps> = ({
       </div>
 
       {/* Hover Overlay - Add to Cart Button */}
-      <div className="absolute bottom-0 flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1">
+      <div className="absolute bottom-0 flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer">
         <button
           onClick={handleAddToCart}
-          className="flex items-center justify-center w-full h-full hover:text-blue-400 transition-colors duration-200"
+          className="flex items-center justify-center w-full h-full hover:text-blue-400 transition-colors duration-200 cursor-pointer"
           aria-label="Sepete Ekle"
         >
           <TbBasketPlus className="text-xl sm:text-2xl text-white" />

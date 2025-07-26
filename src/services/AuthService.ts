@@ -93,3 +93,25 @@ try{
     throw error;
   }
 }
+
+export const CompleteOrderApi = async (gameIds:number[])=>{
+try{
+    const response = await api.post("/order",{
+      gameIds: gameIds
+    })
+    return response.data
+  }catch(error){
+    console.error("Order could not given succesfully:", error);
+    throw error;
+  }
+}
+
+export const fetchPastOrder = async ()=> {
+  try {
+    const response = await api.get("/order")
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+
+}

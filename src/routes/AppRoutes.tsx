@@ -8,6 +8,8 @@ import AuthLayout from "../layout/AuthLayout";
 import { useUser } from "../Context/UserContext";
 import Register from "../pages/Register/Register";
 import Account from "../pages/Account/Account";
+import Basket from "../pages/Basket/Basket";
+import Order from "../pages/Order/Order";
 
 function AppRoutes() {
   const { isAuthenticated } = useUser();
@@ -50,6 +52,7 @@ function AppRoutes() {
             path="/discounts"
             element={<All key="discounts" discounts={true} />}
           />
+          <Route path="/my-orders" element={<Order key="order" />} />
         </Route>
         {!isAuthenticated && (
           <Route element={<AuthLayout />}>
@@ -60,6 +63,8 @@ function AppRoutes() {
         {isAuthenticated && (
           <Route element={<AuthLayout />}>
             <Route path="/account" element={<Account />} />
+            <Route path="/basket" element={<Basket key="basket" />} />
+            <Route path="/my-orders" element={<Order key="order" />} />
           </Route>
         )}
       </Routes>
