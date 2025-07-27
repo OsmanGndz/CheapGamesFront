@@ -266,7 +266,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                 <p>Giriş / Kayıt</p>
               </button>
             )}
-            <button className="cursor-pointer" onClick={()=>navigate("/basket")}>
+            <button className="cursor-pointer" onClick={()=>isAuthenticated ? navigate("/basket"): navigate("/login")}>
               <LuShoppingBasket className="text-[26px] hover:text-blue-400" />
             </button>
           </div>

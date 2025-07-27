@@ -65,8 +65,14 @@ function AppRoutes() {
             <Route path="/account" element={<Account />} />
             <Route path="/basket" element={<Basket key="basket" />} />
             <Route path="/my-orders" element={<Order key="order" />} />
+<Route
+              path="my-products"
+              element={<UserGames key="products" />}
+            />
           </Route>
         )}
+
+        <Route path="/*" element={<NotFound />} />
       </Routes>
     </>
   );
