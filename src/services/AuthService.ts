@@ -115,3 +115,22 @@ export const fetchPastOrder = async ()=> {
   }
 
 }
+
+export const fetchFavories = async ()=> {
+  try {
+    const response = await api.get("/favorite")
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+
+}
+
+export const AddFavorite = async (id:number)=>{
+  try {
+    const response = await api.post("/favorite",id)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}

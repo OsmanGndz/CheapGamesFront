@@ -10,6 +10,9 @@ import Register from "../pages/Register/Register";
 import Account from "../pages/Account/Account";
 import Basket from "../pages/Basket/Basket";
 import Order from "../pages/Order/Order";
+import NotFound from "../pages/NotFound/NotFound";
+import Favories from "../pages/Favories/Favories";
+import AccountMobile from "../pages/Account/AccountMobile";
 
 function AppRoutes() {
   const { isAuthenticated } = useUser();
@@ -52,7 +55,6 @@ function AppRoutes() {
             path="/discounts"
             element={<All key="discounts" discounts={true} />}
           />
-          <Route path="/my-orders" element={<Order key="order" />} />
         </Route>
         {!isAuthenticated && (
           <Route element={<AuthLayout />}>
@@ -65,10 +67,8 @@ function AppRoutes() {
             <Route path="/account" element={<Account />} />
             <Route path="/basket" element={<Basket key="basket" />} />
             <Route path="/my-orders" element={<Order key="order" />} />
-<Route
-              path="my-products"
-              element={<UserGames key="products" />}
-            />
+            <Route path="favories" element={<Favories key="favories" />} />
+            <Route path="/accountMobile" element={<AccountMobile />} />
           </Route>
         )}
 

@@ -3,7 +3,7 @@ import { ImCreditCard } from "react-icons/im";
 import { IoLogoGameControllerB } from "react-icons/io";
 import { IoRocketSharp } from "react-icons/io5";
 import { MdDiscount } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const topPart = [
   {
@@ -97,7 +97,6 @@ const formal = [
   },
 ];
 const Footer = () => {
-  const navigate = useNavigate();
   return (
     <div className="flex flex-col bg-slate-950 w-full min-h-[200px] py-8 gap-8">
       {/*top part */}
@@ -116,15 +115,16 @@ const Footer = () => {
       <div className="md:grid flex flex-col justify-center items-center md:grid-cols-3 px-4 lg:px-12 gap-12 lg:gap-20">
         {/* logo part */}
         <div className="flex flex-col gap-1 items-center">
-          <div
+          <Link
+            to={"/"}
+            rel="noopener noreferer"
             className="flex gap-1 items-center cursor-pointer"
-            onClick={() => navigate("/")}
           >
             <IoLogoGameControllerB className="text-[48px] text-blue-300" />
             <p className="text-[30px] italic font-bold bg-gradient-to-r from-blue-300 to-blue-700 bg-clip-text text-transparent">
               CHEAPGAMES
             </p>
-          </div>
+          </Link>
           <p className="text-center font-bold text-[16px] border-b-2 border-blue-400 pb-2">
             Türkiye'nin En Uygun ve En Güvenilir Ucuz Oyun Mağazası
           </p>
@@ -136,13 +136,13 @@ const Footer = () => {
           <hr className="border-1 w-16 text-blue-400" />
           <div className="pt-2 flex flex-col gap-2 font-semibold">
             {fastAccess.map((item, idx) => (
-              <div
+              <Link
+                to={item.url}
                 key={`${item.name}-${idx}`}
                 className="cursor-pointer"
-                onClick={() => navigate(item.url)}
               >
                 <p className="text-zinc-400">{item.name}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -152,13 +152,13 @@ const Footer = () => {
           <hr className="border-1 w-16 text-blue-400" />
           <div className="pt-2 flex flex-col gap-2 font-semibold">
             {formal.map((item, idx) => (
-              <div
+              <Link
+                to={item.url}
                 key={`${item.name}-${idx}`}
                 className="cursor-pointer"
-                onClick={() => navigate(item.url)}
               >
                 <p className="text-zinc-400">{item.name}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

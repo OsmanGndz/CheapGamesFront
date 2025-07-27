@@ -6,6 +6,7 @@ import { FaArrowDown, FaHeart } from "react-icons/fa";
 import { TbBasketPlus } from "react-icons/tb";
 import Spinner from "../components/Spinner";
 import { useBasket } from "../Context/BasketContext";
+import { AddFavorite } from "../services/AuthService";
 
 const GameDetails = () => {
   const { id } = useParams();
@@ -24,6 +25,10 @@ const GameDetails = () => {
   const handleBasket = () => {
     console.log(data);
     AddToBasket({ ...data, Id: data.id });
+  };
+
+  const AddToFavorites = async (id: number) => {
+    await AddFavorite(id);
   };
 
   return (
@@ -116,7 +121,10 @@ const GameDetails = () => {
                   <TbBasketPlus className="text-lg sm:text-xl text-white" />
                   Sepete Ekle
                 </button>
-                <button className="flex justify-center items-center gap-2 w-full  bg-slate-800 text-zinc-200 hover:text-gray-700 py-2 rounded-md hover:bg-zinc-100 border border-white hover:border-black hover:shadow-md hover:shadow-pink-500 cursor-pointer transition-colors duration-300">
+                <button
+                  className="flex justify-center items-center gap-2 w-full  bg-slate-800 text-zinc-200 hover:text-gray-700 py-2 rounded-md hover:bg-zinc-100 border border-white hover:border-black hover:shadow-md hover:shadow-pink-500 cursor-pointer transition-colors duration-300"
+                  onClick={() => AddToFavorites(data.id)}
+                >
                   <FaHeart className="text-[16px] sm:text-lg text-red-500" />
                   Favorilere Ekle
                 </button>

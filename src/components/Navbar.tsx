@@ -2,7 +2,7 @@ import { ImCreditCard } from "react-icons/im";
 import { FaInstagram, FaUser, FaUserPlus } from "react-icons/fa";
 import { GiTrophyCup } from "react-icons/gi";
 import { IoLogoGameControllerB, IoMdSearch } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { LuShoppingBasket, LuUserRoundCheck } from "react-icons/lu";
 import NavbarMenus from "./NavbarMenus";
@@ -14,6 +14,7 @@ import { useUser } from "../Context/UserContext";
 import { CiLogout } from "react-icons/ci";
 import { MdFavorite, MdManageAccounts } from "react-icons/md";
 import { FaClockRotateLeft } from "react-icons/fa6";
+import Spinner from "./Spinner";
 
 // Hesabım, siparişlerim, favorilerim, çıkış yap
 const accountMenuValues = [
@@ -32,11 +33,17 @@ const accountMenuValues = [
   {
     id: 3,
     icon: <MdFavorite className="text-lg" />,
+    value: "Ürünlerim",
+    url: "/my-products",
+  },
+  {
+    id: 4,
+    icon: <MdFavorite className="text-lg" />,
     value: "Favorilerim",
     url: "/favories",
   },
   {
-    id: 4,
+    id: 5,
     icon: <CiLogout className="text-lg" />,
     value: "Çıkış Yap",
     url: "/",
@@ -99,13 +106,39 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
     setSearch(e.target.value);
   };
 
-  const handleGameClick = (gameId: any) => {
-    navigate(`/game/${gameId}`);
-    setSearch("");
-    setIsSearchBarOpen(false); // Mobilde arama çubuğunu da kapat
+  // Ana düzeltme burada - gameId tipini düzelttik ve error handling ekledik
+  const handleGameClick = (gameId: string | number) => {
+    try {
+      console.log("Game clicked, ID:", gameId);
+      if (!gameId) {
+        console.error("Game ID is undefined or null");
+        return;
+      }
+
+      navigate(`/game/${gameId}`);
+      setSearch("");
+      setIsSearchBarOpen(false);
+    } catch (error) {
+      console.error("Error navigating to game:", error);
+    }
   };
+
   const handlePersonMenu = () => {
     setIsPersonMenuOpen(!isPersonMenuOpen);
+  };
+
+  // Logout işlemi için ayrı fonksiyon
+  const handleLogout = () => {
+    logout();
+    setIsPersonMenuOpen(false);
+  };
+
+  // Account menu click handler
+  const handleAccountMenuClick = (item: any) => {
+    if (item.value === "Çıkış Yap") {
+      handleLogout();
+    }
+    setIsPersonMenuOpen(false);
   };
 
   return (
@@ -116,10 +149,15 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
             <ImCreditCard className="text-xl text-blue-400" />
             <p>Bakiye Yükle</p>
           </div>
-          <div className="flex gap-1 cursor-pointer hover:text-blue-400">
+          <Link
+            to={"https://www.instagram.com/osmangunduz108/"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex gap-1 cursor-pointer hover:text-blue-400"
+          >
             <FaInstagram className="text-xl text-blue-400" />
             <p>Instagram</p>
-          </div>
+          </Link>
           <div className="flex gap-1 ml-[20%]">
             <GiTrophyCup className="text-xl text-blue-400" />
             <p>Türkiye'nin En Büyük Ucuz Oyun Mağazası</p>
@@ -127,35 +165,41 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
         </div>
         <div className="flex lg:hidden gap-4 items-center justify-center px-2 py-3 ">
           {isAuthenticated ? (
-            <button
+            <Link
+              to={"/accountMobile"}
+              rel="noopener noreferrer"
               className="flex gap-1 cursor-pointer hover:text-blue-400"
-              onClick={handlePersonMenu}
             >
               <LuUserRoundCheck className="text-lg text-blue-400" />
               <p>Hesabım</p>
-            </button>
+            </Link>
           ) : (
-            <button
+            <Link
+              to={"/login"}
+              rel="noopener noreferrer"
               className="flex gap-1 cursor-pointer hover:text-blue-400"
-              onClick={() => navigate("/login")}
             >
               <LuUserRoundCheck className="text-xl text-blue-400" />
               <p>Giriş Yap</p>
-            </button>
+            </Link>
           )}
           {isAuthenticated ? (
             <button
               className="flex gap-1 cursor-pointer hover:text-blue-400"
-              onClick={logout}
+              onClick={handleLogout}
             >
               <CiLogout className="text-lg text-blue-400" />
               <p>Çıkış Yap</p>
             </button>
           ) : (
-            <button className="flex gap-1 cursor-pointer hover:text-blue-400">
+            <Link
+              to={"/register"}
+              rel="noopener noreferrer"
+              className="flex gap-1 cursor-pointer hover:text-blue-400"
+            >
               <FaUserPlus className="text-xl text-blue-400" />
               <p>Kayıt Ol</p>
-            </button>
+            </Link>
           )}
           <div className="flex gap-1">
             <ImCreditCard className="text-xl text-blue-400" />
@@ -165,15 +209,16 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
       </div>
       <div className="">
         <div className="hidden lg:flex items-center justify-between w-full py-2 border-b-1 border-blue-400 p-2">
-          <div
+          <Link
+            to={"/"}
+            rel="noopener noreferrer"
             className="flex gap-1 items-center cursor-pointer hover:text-blue-400"
-            onClick={() => navigate("/")}
           >
             <IoLogoGameControllerB className="text-[48px] text-blue-300" />
             <p className="text-[30px] italic font-bold bg-gradient-to-r from-blue-300 to-blue-700 bg-clip-text text-transparent">
               CHEAPGAMES
             </p>
-          </div>
+          </Link>
           <div
             className="flex flex-col w-[50%] justify-between items-center relative"
             ref={desktopSearchRef}
@@ -200,16 +245,20 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
               } absolute top-12 bg-zinc-200 rounded-lg p-2 border-2 border-blue-400 text-black `}
             >
               {isLoading ? (
-                <p className="text-center ">Loading...</p>
+                <div className="text-center flex justify-center items-center w-full">
+                  <Spinner />
+                </div>
               ) : error ? (
-                <p className="text-center">Error fetching data</p>
+                <p className="text-center text-red-500">
+                  Error: {error.message}
+                </p>
               ) : (
                 <ul className="h-full overflow-y-auto">
-                  {data?.games.length > 0 ? (
+                  {data?.games?.length > 0 ? (
                     data?.games.map((game: any) => (
                       <li
                         key={game.id}
-                        className="flex gap-4 cursor-pointer hover:bg-blue-400 p-2 rounded-lg"
+                        className="flex gap-4 cursor-pointer hover:bg-blue-400 p-2 rounded-lg h-24"
                         onClick={() => handleGameClick(game.id)}
                       >
                         <img
@@ -245,43 +294,51 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                 {isPersonMenuOpen && (
                   <ul className="absolute right-0 top-full bg-zinc-300 w-[150px] text-black p-2 rounded-md z-60">
                     {accountMenuValues.map((item, idx) => (
-                      <li
+                      <Link
+                        to={`${item.url}`}
+                        rel="noopener noreferer"
                         key={`${idx} - ${item.value}`}
                         className="flex items-center gap-2 w-full h-full cursor-pointer hover:bg-blue-400 p-2 rounded-md"
-                        onClick={() => navigate(item.url)}
+                        onClick={() => handleAccountMenuClick(item)}
                       >
                         {item.icon}
                         <p>{item.value}</p>
-                      </li>
+                      </Link>
                     ))}
                   </ul>
                 )}
               </div>
             ) : (
-              <button
+              <Link
+                to={"/login"}
+                rel="noopener noreferer"
                 className="flex gap-1 items-center cursor-pointer bg-blue-400 hover:bg-blue-500 p-1 rounded-lg"
-                onClick={() => navigate("/login")}
               >
                 <FaUser />
                 <p>Giriş / Kayıt</p>
-              </button>
+              </Link>
             )}
-            <button className="cursor-pointer" onClick={()=>isAuthenticated ? navigate("/basket"): navigate("/login")}>
+            <Link
+              to={`${isAuthenticated ? "/basket" : "/login"}`}
+              rel="noopener noreferer"
+              className="cursor-pointer"
+            >
               <LuShoppingBasket className="text-[26px] hover:text-blue-400" />
-            </button>
+            </Link>
           </div>
         </div>
-        {/* MOBİL NAVBAR - Düzeltilmiş Kısım */}
+        {/* MOBİL NAVBAR */}
         <div className="flex lg:hidden items-center justify-between w-full py-4 border-b-1 border-blue-400 p-2 relative">
-          <div
+          <Link
+            to={"/"}
+            rel="noopener noreferer"
             className="flex gap-1 items-center cursor-pointer hover:text-blue-400"
-            onClick={() => navigate("/")}
           >
             <IoLogoGameControllerB className="text-[32px] text-blue-300" />
             <p className="text-[22px] italic font-bold bg-gradient-to-r from-blue-300 to-blue-700 bg-clip-text text-transparent">
               CHEAPGAMES
             </p>
-          </div>
+          </Link>
           <div className="flex gap-4 items-center">
             <div
               onClick={() => setIsSideBarOpen(true)}
@@ -295,19 +352,24 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                 onClick={() => setIsSearchBarOpen(!isSearchBarOpen)}
               />
             </div>
-            <button
+            <Link
+              to={`${isAuthenticated ? "/basket" : "/login"}`}
+              rel="noopener noreferer"
               className="flex gap-4 items-center cursor-pointer"
-              onClick={() => navigate("/basket")}
+              onClick={() =>
+                isAuthenticated ? navigate("/basket") : navigate("/login")
+              }
             >
               <LuShoppingBasket className="text-[30px]" />
-            </button>
+            </Link>
           </div>
 
-          {/* MOBİL ARAMA ÇUBUĞU - Tamamen Yeniden Düzenlendi */}
+          {/* MOBİL ARAMA ÇUBUĞU - Click Sorunu Düzeltildi */}
           {isSearchBarOpen && (
             <div
-              className="absolute top-full left-0 right-0 z-50 px-2"
+              className="absolute top-full left-0 right-0 z-[9999] px-2 bg-slate-800"
               ref={searchRef}
+              style={{ zIndex: 9999 }}
             >
               {/* Arama Input'u */}
               <div className="flex justify-between bg-slate-900 rounded-lg p-2 w-full border-2 border-blue-400 mb-1">
@@ -319,52 +381,67 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                   className="w-full focus:outline-none text-[14px] placeholder-zinc-300 bg-transparent text-white"
                   autoFocus
                 />
-                <IoMdSearch className="text-blue-400 text-[22px]" />
+                <IoMdSearch className="text-blue-400 text-[22px] pointer-events-none" />
               </div>
 
               {/* Arama Sonuçları */}
               {search.length > 0 && (
                 <div
                   className={`${
-                    data?.games?.length > 0 ? "h-[250px]" : "h-[50px]"
-                  } w-full bg-zinc-200 rounded-lg p-2 border-2 border-blue-400 text-black shadow-lg`}
+                    data?.games?.length > 0 ? "max-h-[250px]" : "h-[50px]"
+                  } w-full bg-zinc-200 rounded-lg border-2 border-blue-400 text-black shadow-xl overflow-hidden`}
+                  style={{
+                    position: "relative",
+                    zIndex: 10000,
+                  }}
                 >
                   {isLoading ? (
-                    <p className="text-center py-4">Loading...</p>
+                    <div className="p-4">
+                      <p className="text-center">Loading...</p>
+                    </div>
                   ) : error ? (
-                    <p className="text-center py-4">Error fetching data</p>
+                    <div className="p-4">
+                      <p className="text-center">Error fetching data</p>
+                    </div>
                   ) : (
-                    <div className="h-full overflow-y-auto">
+                    <>
                       {data?.games?.length > 0 ? (
-                        <ul className="space-y-1">
-                          {data.games.map((game: any) => (
-                            <li
-                              key={game.id}
-                              className="flex gap-3 cursor-pointer hover:bg-blue-400 p-2 rounded-lg transition-colors"
-                              onClick={() => handleGameClick(game.id)}
+                        <div className="overflow-y-auto max-h-[250px] p-2">
+                          {data.games.map((game: any, index: number) => (
+                            <div
+                              key={`${game.id}-${index}`}
+                              className="flex gap-3 cursor-pointer hover:bg-blue-400 p-3 rounded-lg transition-all duration-200 mb-1 active:bg-blue-500 h-24"
+                              onTouchEnd={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleGameClick(game.id);
+                              }}
                             >
-                              <img
-                                src={game.gameImage}
-                                alt={game.gameName}
-                                className="w-12 h-12 object-cover rounded"
-                              />
-                              <div className="flex flex-col justify-center flex-1 min-w-0">
-                                <h3 className="font-bold text-sm truncate">
+                              <div className="flex-shrink-0">
+                                <img
+                                  src={game.gameImage}
+                                  alt={game.gameName}
+                                  className="w-12 h-12 object-cover rounded"
+                                  draggable={false}
+                                />
+                              </div>
+                              <div className="flex flex-col justify-center flex-1 min-w-0 pointer-events-none">
+                                <h3 className="font-bold text-sm truncate text-gray-900">
                                   {game.gameName}
                                 </h3>
                                 <p className="text-gray-600 text-xs">
                                   {game.gamePrice} TL
                                 </p>
                               </div>
-                            </li>
+                            </div>
                           ))}
-                        </ul>
+                        </div>
                       ) : (
-                        <p className="text-center py-4">
-                          Arama sonuç bulunamadı
-                        </p>
+                        <div className="p-4">
+                          <p className="text-center">Arama sonuç bulunamadı</p>
+                        </div>
                       )}
-                    </div>
+                    </>
                   )}
                 </div>
               )}

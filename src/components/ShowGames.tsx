@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import type { ShowGamesProps } from "../types/ShowGames";
 import GameCard from "./GameCard";
 import FilterGame from "./FilterGame";
@@ -8,7 +8,7 @@ import Spinner from "./Spinner";
 import { useBasket } from "../Context/BasketContext";
 
 interface dataProps {
-  id: number;
+  Id: number;
   gameName: string;
   gameDescription: string;
   gameImage: string;

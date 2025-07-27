@@ -36,7 +36,6 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
     });
   };
 
-  // URL'den parametreleri al
   const getUrlParams = () => {
     return {
       categoryUrl: searchParams.get("category") || category,
@@ -75,11 +74,6 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
     pageSize: urlParams.pageSizeUrl,
   }));
 
-  const [priceRange, setPriceRange] = useState<PriceRange>(() => ({
-    min: urlParams.minPriceUrl || 0,
-    max: urlParams.maxPriceUrl || 5000,
-  }));
-
   // Data yüklendikten sonra price range'i güncelle (sadece URL'de yoksa)
   useEffect(() => {
     if (data && !isInitialized) {
@@ -87,7 +81,6 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
 
       // Eğer URL'de price parametreleri yoksa, data'dan al
       if (!urlParams.minPriceUrl && !urlParams.maxPriceUrl) {
-        setPriceRange({ min: minPrice, max: maxPrice });
         setFilters({ min: minPrice, max: maxPrice });
       }
 
@@ -141,23 +134,19 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
     }
   }, [gameData]);
 
-  useEffect(()=>{
-    setPageInfo(
-      {
-        currentPage: 1,
-        pageSize: sortFilter.pageSizeFilter,
-        totalGame: gameData?.totalGame || 0
-      }
-    )
-  },[sortFilter,filters])
+  useEffect(() => {
+    setPageInfo({
+      currentPage: 1,
+      pageSize: sortFilter.pageSizeFilter,
+      totalGame: gameData?.totalGame || 0,
+    });
+  }, [sortFilter, filters]);
 
   const handlePriceChange = (priceRange: PriceRange) => {
     setFilters(priceRange);
     setShouldUpdateUrl(true);
-    console.log("Fiyat aralığı değişti:", priceRange);
   };
 
-  // URL güncelleme fonksiyonu
   const updateUrl = useCallback(() => {
     if (!shouldUpdateUrl) return;
 
@@ -218,9 +207,14 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
           color="fill-blue-400"
           size="w-8 h-8"
         />
+      ) : error ? (
+        <p className="text-center text-red-500">Error: {error.message}</p>
       ) : (
         <div className="hidden md:flex w-[30%] xl:w-[20%] flex-col gap-3">
-          <h1 className="text-[25px] font-semibold">{platform}</h1>
+          <h1 className="text-[25px] font-semibold">
+            {platform ? platform + " PC Oyunları" : category}
+            {discounts ? "Kampanyalar" : ""}
+          </h1>
           <div className="flex flex-col items-center gap-2 text-[20px] font-semibold">
             <h3 className="border-b border-blue-400 pb-1">Filtre</h3>
             <PriceFilter
@@ -237,6 +231,9 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
       )}
 
       <div className="w-full md:w-[70%] xl:w-[80%] p-4 md:border-l border-zinc-200 flex flex-col gap-4">
+        <h1 className="flex md:hidden w-full text-center justify-center text-3xl font-semibold mb-8">
+          {platform ? platform + " PC Oyunları" : category}
+        </h1>
         <div>
           <SortFilter
             key={`${sortFilter.sortingFilter}-${sortFilter.pageSizeFilter}`}

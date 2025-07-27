@@ -1,6 +1,6 @@
 import { MdCancel } from "react-icons/md";
 import type { SideBarProps } from "../types/SideBar";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
 
@@ -37,7 +37,6 @@ const SideBar: React.FC<SideBarProps> = ({
   setIsSideBarOpen,
   isSideBarOpen,
 }) => {
-  const navigate = useNavigate();
   const [openMenus, setOpenMenus] = useState<{ [key: number]: boolean }>({});
   const sideBarRef = useRef<HTMLDivElement>(null);
 
@@ -67,7 +66,6 @@ const SideBar: React.FC<SideBarProps> = ({
 
   return (
     <>
-      {/* Overlay - Arka planı karartma */}
       <div
         className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 lg:hidden ${
           isSideBarOpen
@@ -77,7 +75,6 @@ const SideBar: React.FC<SideBarProps> = ({
         onClick={() => setIsSideBarOpen(false)}
       />
 
-      {/* Sidebar */}
       <div
         ref={sideBarRef}
         className={`fixed lg:hidden top-0 left-0 h-full w-[80%] z-50 bg-slate-800 text-[20px] transition-transform duration-700 ease-in-out transform ${
@@ -128,31 +125,33 @@ const SideBar: React.FC<SideBarProps> = ({
                             : "border-b border-stone-800"
                         }`}
                       >
-                        <p
+                        <Link
+                          to={subMenu.url}
+                          rel="noopener noreferer"
                           onClick={() => {
-                            navigate(subMenu.url);
                             setIsSideBarOpen(false);
                           }}
                           className="cursor-pointer text-white hover:text-blue-400 transition-colors"
                         >
                           {subMenu.name}
-                        </p>
+                        </Link>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
             ) : (
-              <div
+              <Link
+                to={menu.url}
+                rel="noopener noreferer"
                 key={menu.id}
                 className="px-6 py-2 cursor-pointer rounded-lg hover:bg-blue-400 transition-all duration-200"
                 onClick={() => {
-                  navigate(menu.url || "/");
                   setIsSideBarOpen(false);
                 }}
               >
                 <p className="text-white hover:text-white">{menu.name}</p>
-              </div>
+              </Link>
             )
           )}
         </div>

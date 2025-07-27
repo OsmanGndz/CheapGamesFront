@@ -1,5 +1,5 @@
 import { IoMdArrowDropdown } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const navbarMenus = [
   {
@@ -31,8 +31,6 @@ const navbarMenus = [
 ];
 
 const NavbarMenus = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="flex items-center gap-2 ">
       {navbarMenus.map((menu, index) =>
@@ -46,24 +44,26 @@ const NavbarMenus = () => {
             {/* Submenu */}
             <div className="absolute left-[28px] top-full hidden group-hover:flex flex-col gap-1 justify-center items-center bg-slate-800 text-white rounded-md shadow-lg z-25 min-w-[120px] px-4 py-2 font-semibold">
               {menu.SubMenus.map((subMenu, idx) => (
-                <span
+                <Link
+                  to={subMenu.url}
+                  rel="noopener noreferer"
                   key={`${subMenu.name}-${idx}`}
-                  onClick={() => navigate(subMenu.url)}
                   className="hover:text-blue-400 cursor-pointer border-b border-transparent hover:border-blue-400 transition-all duration-200"
                 >
                   {subMenu.name}
-                </span>
+                </Link>
               ))}
             </div>
           </div>
         ) : (
-          <div
+          <Link
+            to={menu.url}
+            rel="noopener noreferer"
             key={`${menu.name}-${index}`}
             className="px-10 py-2 cursor-pointer rounded-lg hover:bg-blue-400 transition-all duration-200"
-            onClick={() => menu.url && navigate(menu.url)}
           >
             <p className="text-white">{menu.name}</p>
-          </div>
+          </Link>
         )
       )}
     </div>
