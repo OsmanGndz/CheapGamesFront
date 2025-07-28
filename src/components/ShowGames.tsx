@@ -44,7 +44,6 @@ const ShowGames: React.FC<ShowGamesProps> = ({
 
   return (
     <div className="w-full flex flex-col gap-8">
-      
       {loading && (
         <Spinner
           className="flex justify-center items-center w-full"
@@ -70,7 +69,7 @@ const ShowGames: React.FC<ShowGamesProps> = ({
                 key={`${game.gameName}-${index}`}
                 {...rest}
                 {...(id !== undefined ? { Id: id } : {})}
-                onClick={handleGameClick}
+                path={`/game/${id}`}
                 onAddToCart={handleAddToCart}
               />
             );

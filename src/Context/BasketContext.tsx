@@ -26,6 +26,7 @@ interface BasketContextType {
   RemoveFromBasket: (id: number) => void;
   GetBasketIds: () => number[];
   ResetBasket: () => void;
+  isInBasket: (id: number) => boolean;
   basket: GameType[];
 }
 
@@ -67,6 +68,10 @@ export const BasketProvider: React.FC<{ children: React.ReactNode }> = ({
     setBasket([]);
   };
 
+  const isInBasket = (id: number) => {
+    return basket.some((item) => item.id === id);
+  };
+
   return (
     <BasketContext.Provider
       value={{
@@ -75,6 +80,7 @@ export const BasketProvider: React.FC<{ children: React.ReactNode }> = ({
         GetBasketIds,
         basket,
         ResetBasket,
+        isInBasket,
       }}
     >
       {children}

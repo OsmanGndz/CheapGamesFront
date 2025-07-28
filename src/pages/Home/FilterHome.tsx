@@ -4,7 +4,6 @@ import { GiTrophyCup } from "react-icons/gi";
 import { IoDiamondSharp, IoRocketSharp } from "react-icons/io5";
 import MiniSlider from "../../components/MiniSlider";
 import FilterMenu from "../../components/FilterMenu";
-import type { FilterMenuProps } from "../../types/MiniSlider";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFilteredGameData } from "../../services/GameService";
 

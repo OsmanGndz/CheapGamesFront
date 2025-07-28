@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import type { MiniSliderProps } from "../types/MiniSlider";
 import GameCard from "./GameCard";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
 import { useBasket } from "../Context/BasketContext";
 
@@ -21,11 +20,91 @@ interface dataProps {
 }
 
 const MiniSlider: React.FC<MiniSliderProps> = ({ isloading, error, data }) => {
-  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState<number>(1);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { AddToBasket } = useBasket();
+
+  // Drag/Swipe state
+  const dragStartX = useRef<number | null>(null);
+  const dragStartY = useRef<number | null>(null);
+  const dragDeltaX = useRef<number>(0);
+  const isDragging = useRef<boolean>(false);
+  const dragType = useRef<"mouse" | "touch" | null>(null);
+
+  // Drag/Swipe handlers
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    if ("touches" in e) {
+      dragType.current = "touch";
+      dragStartX.current = e.touches[0].clientX;
+      dragStartY.current = e.touches[0].clientY;
+    } else {
+      dragType.current = "mouse";
+      dragStartX.current = e.clientX;
+      dragStartY.current = e.clientY;
+    }
+    isDragging.current = true;
+    dragDeltaX.current = 0;
+    // Metin seçimini engelle
+    document.body.style.userSelect = "none";
+  };
+
+  const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging.current || dragStartX.current === null) return;
+    // Sadece doğru tipte event işlenmeli
+    if (
+      ("touches" in e && dragType.current !== "touch") ||
+      (!("touches" in e) && dragType.current !== "mouse")
+    )
+      return;
+    let clientX = 0;
+    let clientY = 0;
+    if ("touches" in e) {
+      if (e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      }
+    } else {
+      // MouseEvent
+      clientX = (e as React.MouseEvent).clientX;
+      clientY = (e as React.MouseEvent).clientY;
+    }
+    const deltaX = clientX - dragStartX.current;
+    const deltaY = clientY - (dragStartY.current ?? 0);
+    if (Math.abs(deltaY) > Math.abs(deltaX)) return;
+    dragDeltaX.current = deltaX;
+    if (e.cancelable) e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragEnd = (e?: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging.current) return;
+    // Sadece doğru tipte event işlenmeli
+    if (e) {
+      if (
+        ("touches" in e && dragType.current !== "touch") ||
+        (!("touches" in e) && dragType.current !== "mouse")
+      )
+        return;
+    }
+    isDragging.current = false;
+    document.body.style.userSelect = "";
+    if (Math.abs(dragDeltaX.current) > 50) {
+      const isDesktop =
+        typeof window !== "undefined" && window.innerWidth >= 1024;
+      const times = isDesktop ? 2 : 1;
+      if (dragDeltaX.current > 0) {
+        for (let i = 0; i < times; i++) handlePrev();
+      } else {
+        for (let i = 0; i < times; i++) handleNext();
+      }
+    }
+    dragStartX.current = null;
+    dragStartY.current = null;
+    dragDeltaX.current = 0;
+    dragType.current = null;
+    if (e && e.stopPropagation) e.stopPropagation();
+  };
 
   const getVisibleCards = () => {
     if (typeof window === "undefined") return 1;
@@ -87,11 +166,6 @@ const MiniSlider: React.FC<MiniSliderProps> = ({ isloading, error, data }) => {
 
   const translateX = -(currentIndex * (100 / visibleCards + 0.05));
 
-  // Oyun kartına tıklandığında çalışacak fonksiyon
-  const handleGameClick = (gameData: number) => {
-    navigate(`/game/${gameData}`);
-  };
-
   // Sepete ekle butonuna tıklandığında çalışacak fonksiyon
   const handleAddToCart = (gameData: dataProps) => {
     AddToBasket(gameData);
@@ -117,7 +191,13 @@ const MiniSlider: React.FC<MiniSliderProps> = ({ isloading, error, data }) => {
   return (
     <div className="flex flex-col justify-center gap-8 w-full relative">
       {data && data.length > 0 && (
-        <div className="relative overflow-hidden w-full">
+        <div
+          className="relative overflow-hidden w-full"
+          onTouchStart={handleDragStart}
+          onTouchMove={handleDragMove}
+          onTouchEnd={handleDragEnd}
+          style={{ userSelect: isDragging.current ? "none" : undefined }}
+        >
           {/* Slider Container */}
           <div
             className="flex transition-transform duration-700 ease-in-out items-stretch"
@@ -135,7 +215,7 @@ const MiniSlider: React.FC<MiniSliderProps> = ({ isloading, error, data }) => {
                   {...(id !== undefined ? { Id: id } : {})}
                   width={`calc(${100 / visibleCards}% - 0.44rem)`}
                   minWidth="90px"
-                  onClick={handleGameClick}
+                  path={`/game/${id}`}
                   onAddToCart={handleAddToCart}
                 />
               );
