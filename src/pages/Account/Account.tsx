@@ -4,6 +4,7 @@ import { fetchMe } from "../../services/AuthService";
 import Spinner from "../../components/Spinner";
 import ChangePersonalInfo from "./ChangePersonalInfo";
 import ChangePassword from "./ChangePassword";
+import { toast } from "react-toastify";
 
 const Account = () => {
   const { data, isLoading, error } = useQuery({
@@ -11,25 +12,25 @@ const Account = () => {
     queryFn: () => fetchMe(),
   });
 
- if (isLoading) {
-   return (
-     <Spinner className="flex w-full items-center justify-center pt-20" />
-   );
- }
+  if (isLoading) {
+    return (
+      <Spinner className="flex w-full items-center justify-center pt-20" />
+    );
+  }
 
- if (error) {
-   return <p className="text-red-500">error: {error.message}</p>;
- }
+  if (error) {
+    toast.error("Hesap bilgileri yüklenirken bir hata oluştu.");
+  }
 
   return (
-    <div className="py-8 flex w-full gap-8">
-      <div className="flex flex-col w-[30%] items-center gap-4">
+    <div className="py-8 flex flex-col md:flex-row w-full gap-8">
+      <div className="flex flex-col md:w-[35%] lg:w-[30%] items-center gap-4">
         <FaUser className="text-[160px] text-blue-400" />
         <h1 className="text-xl font-semibold text-center">
           {data?.name} {data?.surname}
         </h1>
       </div>
-      <div className="flex flex-col w-[40%] gap-16 text-zinc-200">
+      <div className="flex flex-col md:w-[50%] lg:w-[40%] gap-16 text-zinc-200">
         <ChangePersonalInfo user={data} />
         <ChangePassword />
       </div>

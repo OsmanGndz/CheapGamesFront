@@ -68,7 +68,7 @@ function AppRoutes() {
             <Route path="/basket" element={<Basket key="basket" />} />
             <Route path="/my-orders" element={<Order key="order" />} />
             <Route path="favories" element={<Favories key="favories" />} />
-            <Route path="/accountMobile" element={<AccountMobile />} />
+            <Route path="/accountMobile" element={<AccountMobile key="accountMobile" />} />
           </Route>
         )}
 

@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { fetchPastOrder } from "../../services/AuthService";
-import {formatDateToReadable} from "../../logic/DateFormat.l"
+import { formatDateToReadable } from "../../logic/DateFormat.l";
+import Spinner from "../../components/Spinner";
+import { toast } from "react-toastify";
 interface OrderItem {
   id: number;
   name: string;
@@ -22,7 +24,7 @@ const Order = () => {
     [key: string]: boolean;
   }>({});
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["orders"],
     queryFn: fetchPastOrder,
     select: (rawData): OrderData[] => {
@@ -49,7 +51,11 @@ const Order = () => {
   };
 
   if (isLoading) {
-    return <div className="text-center text-white py-10">Yükleniyor...</div>;
+    return <Spinner className="flex w-full justify-center" />;
+  }
+
+  if (error) {
+    toast.error("Siparişler yüklenirken bir hata oluştu.");
   }
 
   return (

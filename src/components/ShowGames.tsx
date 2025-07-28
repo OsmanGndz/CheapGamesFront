@@ -2,9 +2,9 @@ import React from "react";
 import type { ShowGamesProps } from "../types/ShowGames";
 import GameCard from "./GameCard";
 import Pagination from "./Pagination";
-import { useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
 import { useBasket } from "../Context/BasketContext";
+import { toast } from "react-toastify";
 
 interface dataProps {
   Id: number;
@@ -29,18 +29,16 @@ const ShowGames: React.FC<ShowGamesProps> = ({
   pageInfo,
   setPageInfo,
 }) => {
-  const navigate = useNavigate();
   const { AddToBasket } = useBasket();
-
-  // Oyun kartına tıklandığında çalışacak fonksiyon
-  const handleGameClick = (gameData: number) => {
-    navigate(`/game/${gameData}`);
-  };
 
   // Sepete ekle butonuna tıklandığında çalışacak fonksiyon
   const handleAddToCart = (gameData: dataProps) => {
     AddToBasket(gameData);
   };
+
+  if (error) {
+    toast.error("Oyunlar yüklenirken bir hata oluştu.");
+  }
 
   return (
     <div className="w-full flex flex-col gap-8">
@@ -51,11 +49,7 @@ const ShowGames: React.FC<ShowGamesProps> = ({
           size="w-10 h-10"
         />
       )}
-      {error && (
-        <div className="flex justify-center items-center w-full text-red-500">
-          Error: {error.message || "Bilinmeyen hata"}
-        </div>
-      )}
+
       <div
         className={`grid grid-cols-2 sm:grid-cols-4 gap-4 py-4,
           ${colNumber == 4 && "lg:grid-cols-4"}

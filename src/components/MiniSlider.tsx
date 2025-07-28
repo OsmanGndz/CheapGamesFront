@@ -4,6 +4,7 @@ import GameCard from "./GameCard";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Spinner from "./Spinner";
 import { useBasket } from "../Context/BasketContext";
+import { toast } from "react-toastify";
 
 interface dataProps {
   Id: number;
@@ -181,11 +182,7 @@ const MiniSlider: React.FC<MiniSliderProps> = ({ isloading, error, data }) => {
     );
   }
   if (error) {
-    return (
-      <p className="flex w-full items-center justify-center text-red-500">
-        Error: {error}
-      </p>
-    );
+    toast.error("Oyunlar yüklenirken bir hata oluştu.");
   }
 
   return (

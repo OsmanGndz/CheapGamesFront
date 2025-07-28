@@ -13,6 +13,7 @@ interface UserContextType {
   Login: (token: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
+  isLoading: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -21,6 +22,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { ResetBasket } = useBasket();
 
@@ -50,6 +52,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       checkTokenExpiration(parsedToken);
       setToken(parsedToken);
     }
+    setIsLoading(false);
   }, []);
 
   const Login = (token: string) => {
@@ -72,7 +75,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     token,
     Login,
     logout,
-    isAuthenticated: token ? true : false,
+    isAuthenticated: !!token,
+    isLoading, // yeni eklenen
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

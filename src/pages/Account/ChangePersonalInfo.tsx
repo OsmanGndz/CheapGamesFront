@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { UpdateUserInformation } from "../../services/AuthService";
+import { toast } from "react-toastify";
 
 interface UpdateData {
   name: string;
@@ -20,7 +21,6 @@ interface ChangePersonalInfoProps {
 
 const ChangePersonalInfo = ({ user }: ChangePersonalInfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [updateData, setUpdateData] = useState<UpdateData>({
     name: "",
     surname: "",
@@ -30,7 +30,6 @@ const ChangePersonalInfo = ({ user }: ChangePersonalInfoProps) => {
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
 
     if (
       (updateData.name === "",
@@ -41,8 +40,9 @@ const ChangePersonalInfo = ({ user }: ChangePersonalInfoProps) => {
 
     try {
       await UpdateUserInformation(updateData);
+      toast.success("Kullanıcı bilgileriniz başarılı şekilde değiştirildi.");
     } catch (error: any) {
-      setError(error.response.data);
+      toast.error("Kullanıcı bilgileri değiştirilirken bir hata oluştu.");
     }
     setIsLoading(false);
   };

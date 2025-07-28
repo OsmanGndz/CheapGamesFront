@@ -1,5 +1,5 @@
 import { ImCreditCard } from "react-icons/im";
-import { FaInstagram, FaUser, FaUserPlus } from "react-icons/fa";
+import { FaBoxOpen, FaInstagram, FaUser, FaUserPlus } from "react-icons/fa";
 import { GiTrophyCup } from "react-icons/gi";
 import { IoLogoGameControllerB, IoMdSearch } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ const accountMenuValues = [
   },
   {
     id: 3,
-    icon: <MdFavorite className="text-lg" />,
+    icon: <FaBoxOpen className="text-lg" />,
     value: "Ürünlerim",
     url: "/my-products",
   },

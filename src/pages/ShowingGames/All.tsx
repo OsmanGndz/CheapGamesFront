@@ -12,6 +12,7 @@ import type { ShowGamesProps } from "../../types/ShowGames";
 import SortFilter from "./SortFilter";
 import { useSearchParams } from "react-router-dom";
 import Spinner from "../../components/Spinner";
+import { toast } from "react-toastify";
 
 interface PriceRange {
   min: number | null;
@@ -199,6 +200,10 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
     setShouldUpdateUrl(true);
   }, [filters.min, filters.max]);
 
+  if (error) {
+    toast.error("Fiyat bilgileri alınırken hata oluştu.");
+  }
+
   return (
     <div className="flex w-full md:px-12 lg:px-20 xl:px-24 bg-gray-900 text-white min-h-screen gap-4">
       {isLoading || !data ? (
@@ -207,12 +212,10 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
           color="fill-blue-400"
           size="w-8 h-8"
         />
-      ) : error ? (
-        <p className="text-center text-red-500">Error: {error.message}</p>
       ) : (
         <div className="hidden md:flex w-[30%] xl:w-[20%] flex-col gap-3">
           <h1 className="text-[25px] font-semibold">
-            {platform ?  "PC - " + platform : category}
+            {platform ? "PC - " + platform : category}
             {discounts ? "Kampanyalar" : ""}
           </h1>
           <div className="flex flex-col items-center gap-2 text-[20px] font-semibold">
@@ -232,7 +235,7 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
 
       <div className="w-full md:w-[70%] xl:w-[80%] p-4 md:border-l border-zinc-200 flex flex-col gap-4">
         <h1 className="flex md:hidden w-full text-center justify-center text-3xl font-semibold mb-8">
-          {platform ?  " PC - " + platform  : category}
+          {platform ? " PC - " + platform : category}
         </h1>
         <div>
           <SortFilter

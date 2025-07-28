@@ -3,6 +3,7 @@ import { TbBasketMinus, TbBasketPlus } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../Context/UserContext";
 import { useBasket } from "../Context/BasketContext";
+import { toast } from "react-toastify";
 
 interface GameCardProps {
   Id: number;
@@ -61,9 +62,11 @@ const GameCard: React.FC<GameCardProps> = ({
     e.stopPropagation(); // Kart tıklamasını engelle
     if (!isAuthenticated) {
       navigate("/login");
-    }
-    if (onAddToCart) {
-      onAddToCart(gameData);
+      toast.error("Sepete eklemeden önce giriş yapmalısınız.")
+    } else {
+      if (onAddToCart) {
+        onAddToCart(gameData);
+      }
     }
   };
 
@@ -71,8 +74,7 @@ const GameCard: React.FC<GameCardProps> = ({
     e.stopPropagation(); // Kart tıklamasını engelle
     if (!isAuthenticated) {
       navigate("/login");
-    }
-    if (onAddToCart) {
+    } else {
       RemoveFromBasket(Id);
     }
   };

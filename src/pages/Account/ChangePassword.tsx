@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ChangePasswordRequest } from "../../services/AuthService";
+import { toast } from "react-toastify";
 
 interface ChangePasswordProp {
   password: string;
@@ -8,7 +9,6 @@ interface ChangePasswordProp {
 }
 const ChangePassword = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [changePassword, setChangePassword] = useState<ChangePasswordProp>({
     password: "",
     newPassword: "",
@@ -19,18 +19,30 @@ const ChangePassword = () => {
   const handlePasswordChange = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
 
+    // Minimum karakter kontrolü
+    if (
+      changePassword.password.length < 6 ||
+      changePassword.newPassword.length < 6 ||
+      changePassword.confirmPassword.length < 6
+    ) {
+      toast.error("Parolalar en az 6 karakter olmalıdır.");
+      setIsLoading(false);
+      return;
+    }
+
+    // Parolalar eşleşiyor mu?
     if (changePassword.newPassword !== changePassword.confirmPassword) {
-      setError("Passwords are not same!!!");
+      toast.error("Parolalar eşleşmiyor.");
+      setIsLoading(false);
+      return;
     }
 
     try {
-      const response = await ChangePasswordRequest(changePassword);
-      console.log("Kayıt başarılı:", response);
+      await ChangePasswordRequest(changePassword);
+      toast.success("Parola değiştirildi.");
     } catch (error: any) {
-      setError(error.response.data);
-      console.error("Kayıt başarısız:", error);
+      toast.error(`Parola değiştirilirken bir hata oluştu.`);
     }
     setIsLoading(false);
   };
@@ -88,7 +100,7 @@ const ChangePassword = () => {
             Parolayı Göster
           </span>
         </label>
-        {error.length > 0 && <p className="text-red-500">Error: {error}</p>}
+
         <button
           type="submit"
           className={`${
