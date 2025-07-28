@@ -4,7 +4,7 @@ import { GiTrophyCup } from "react-icons/gi";
 import { IoDiamondSharp, IoRocketSharp } from "react-icons/io5";
 import MiniSlider from "../../components/MiniSlider";
 import FilterMenu from "../../components/FilterMenu";
-import type { FilterProps } from "../../types/MiniSlider";
+import type { FilterMenuProps } from "../../types/MiniSlider";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFilteredGameData } from "../../services/GameService";
 
@@ -31,14 +31,17 @@ const allGamesFilters = [
   },
 ];
 const FilterHome = () => {
-  const [filter, setFilter] = useState<FilterProps["filter"]>(
-    allGamesFilters[0]
-  );
+  const [filter, setFilter] = useState<{
+    name: string;
+    icon: React.ReactNode;
+    endpoint: string;
+  }>(allGamesFilters[0]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["games/", filter.endpoint],
     queryFn: () => fetchFilteredGameData(filter.endpoint),
-    staleTime: 1000 * 60 * 30, 
+    staleTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
   });
 
   return (

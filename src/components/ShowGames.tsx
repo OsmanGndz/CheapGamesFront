@@ -1,7 +1,6 @@
 import React from "react";
 import type { ShowGamesProps } from "../types/ShowGames";
 import GameCard from "./GameCard";
-import FilterGame from "./FilterGame";
 import Pagination from "./Pagination";
 import { useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
@@ -23,15 +22,12 @@ interface dataProps {
 
 const ShowGames: React.FC<ShowGamesProps> = ({
   filteredData,
-  filters = [],
   colNumber = 6,
   isPagination = false,
   loading = false,
   error = null,
   pageInfo,
   setPageInfo,
-  filter,
-  setFilter,
 }) => {
   const navigate = useNavigate();
   const { AddToBasket } = useBasket();
@@ -48,11 +44,7 @@ const ShowGames: React.FC<ShowGamesProps> = ({
 
   return (
     <div className="w-full flex flex-col gap-8">
-      <div>
-        {filters?.length > 0 && (
-          <FilterGame filters={filters} filter={filter} setFilter={setFilter} />
-        )}
-      </div>
+      
       {loading && (
         <Spinner
           className="flex justify-center items-center w-full"

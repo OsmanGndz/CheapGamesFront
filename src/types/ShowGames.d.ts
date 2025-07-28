@@ -1,5 +1,4 @@
 export interface ShowGamesProps {
-    filters?: string[];
     colNumber?: number;  
     isPagination?: boolean;
     filteredData?: {
@@ -23,8 +22,6 @@ export interface ShowGamesProps {
         pageSize: number;
     };
     setPageInfo?: React.Dispatch<React.SetStateAction<ShowGamesProps['pageInfo']>>;
-    filter?: string;
-    setFilter?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface FilterGameProps {

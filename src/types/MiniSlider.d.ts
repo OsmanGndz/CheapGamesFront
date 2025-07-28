@@ -16,16 +16,8 @@ export interface MiniSliderProps {
     }[];
 }
 
-export interface FilterProps {
-    filters: {
-        name: string;
-        icon: React.ReactNode;
-        endpoint: string;
-    }[];
-    filter:{
-        name: string;
-        icon: React.ReactNode;
-        endpoint: string;
-    };
-    setFilter: React.Dispatch<React.SetStateAction<FilterProps["filter"]>>;
+export type FilterMenuProps<T> = {
+    filters: T[];
+    filter:T;
+    setFilter: React.Dispatch<React.SetStateAction<T>>;
 }
