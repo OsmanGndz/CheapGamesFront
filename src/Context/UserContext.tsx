@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import {jwtDecode} from "jwt-decode";
-
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import { useBasket } from "./BasketContext";
 
 interface DecodedToken {
   exp: number;
@@ -9,7 +10,7 @@ interface DecodedToken {
 
 interface UserContextType {
   token: string | null;
-  Login: (token:string) => void;
+  Login: (token: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -20,6 +21,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [token, setToken] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { ResetBasket } = useBasket();
 
   // Token süresini kontrol et ve süresi dolmuşsa logout yap
   const checkTokenExpiration = (token: string) => {
@@ -50,21 +53,26 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const Login = (token: string) => {
+    navigate("/", { replace: true });
     localStorage.setItem("token", JSON.stringify(token));
     checkTokenExpiration(token);
+
     setToken(token);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("basket");
     setToken(null);
+    navigate("/");
+    ResetBasket();
   };
 
   const value: UserContextType = {
     token,
     Login,
     logout,
-    isAuthenticated: !!token,
+    isAuthenticated: token ? true : false,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

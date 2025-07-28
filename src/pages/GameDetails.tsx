@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { fetchGameById } from "../services/GameService";
 import { useEffect, useState } from "react";
 import { FaArrowDown, FaHeart } from "react-icons/fa";
-import { TbBasketPlus } from "react-icons/tb";
+import { TbBasketMinus, TbBasketPlus } from "react-icons/tb";
 import Spinner from "../components/Spinner";
 import { useBasket } from "../Context/BasketContext";
 import { AddFavorite } from "../services/AuthService";
@@ -11,7 +11,7 @@ import { AddFavorite } from "../services/AuthService";
 const GameDetails = () => {
   const { id } = useParams();
   const [showMore, setShowMore] = useState(false);
-  const { AddToBasket } = useBasket();
+  const { AddToBasket, RemoveFromBasket, isInBasket } = useBasket();
   const { data, error, isLoading } = useQuery({
     queryKey: ["gameDetails", id],
     queryFn: () => fetchGameById(Number(id)),
@@ -22,9 +22,12 @@ const GameDetails = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleBasket = () => {
-    console.log(data);
+  const handleAddToBasket = () => {
     AddToBasket({ ...data, Id: data.id });
+  };
+
+  const handleRemoveFromBasket = () => {
+    RemoveFromBasket(Number(id));
   };
 
   const AddToFavorites = async (id: number) => {
@@ -114,13 +117,23 @@ const GameDetails = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button
-                  className="flex justify-center items-center gap-2 w-full bg-blue-400 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300"
-                  onClick={handleBasket}
-                >
-                  <TbBasketPlus className="text-lg sm:text-xl text-white" />
-                  Sepete Ekle
-                </button>
+                {!isInBasket(Number(id)) ? (
+                  <button
+                    className="flex justify-center items-center gap-2 w-full bg-blue-400 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300"
+                    onClick={handleAddToBasket}
+                  >
+                    <TbBasketPlus className="text-lg sm:text-xl text-white" />
+                    Sepete Ekle
+                  </button>
+                ) : (
+                  <button
+                    className="flex justify-center items-center gap-2 w-full bg-red-500 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300"
+                    onClick={handleRemoveFromBasket}
+                  >
+                    <TbBasketMinus className="text-lg sm:text-xl text-white" />
+                    Sepetten Çıkar
+                  </button>
+                )}
                 <button
                   className="flex justify-center items-center gap-2 w-full  bg-slate-800 text-zinc-200 hover:text-gray-700 py-2 rounded-md hover:bg-zinc-100 border border-white hover:border-black hover:shadow-md hover:shadow-pink-500 cursor-pointer transition-colors duration-300"
                   onClick={() => AddToFavorites(data.id)}

@@ -14,11 +14,11 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <UserProvider>
-          <BasketProvider>
+        <BasketProvider>
+          <UserProvider>
             <App />
-          </BasketProvider>
-        </UserProvider>
+          </UserProvider>
+        </BasketProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </BrowserRouter>
     </QueryClientProvider>

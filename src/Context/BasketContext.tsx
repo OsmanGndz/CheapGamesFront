@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { toast } from "react-toastify";
 
 interface dataProps {
   Id: number;
@@ -54,10 +55,12 @@ export const BasketProvider: React.FC<{ children: React.ReactNode }> = ({
       price: game.gamePrice,
     };
     setBasket((prev) => [...prev, newItem]);
+    toast.success("Oyun başarılı şekilde sepetinize eklendi.")
   };
 
   const RemoveFromBasket = (id: number) => {
     setBasket((prev) => prev.filter((g) => g.id !== id));
+    toast.success("Oyun başarılı şekilde sepetinizden kaldırıldı.")
   };
 
   const GetBasketIds = () => {

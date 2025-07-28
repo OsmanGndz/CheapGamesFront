@@ -20,14 +20,14 @@ const Basket = () => {
     try {
       CompleteOrderApi(gameIds);
       ResetBasket();
-      navigate("/")
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <div className="flex flex-col px-40 w-full py-8">
+    <div className="flex flex-col px-4 md:px-16 lg:px-24 xl:px-40 w-full py-8 justify-center items-center">
       {/* Başlık */}
       <div className="flex flex-col gap-1 w-full justify-center items-center mb-8">
         <h1 className="w-full text-center text-3xl font-bold">
@@ -37,9 +37,9 @@ const Basket = () => {
       </div>
 
       {basket && basket.length > 0 ? (
-        <div className="flex w-full gap-8">
+        <div className="flex flex-col lg:flex-row w-full gap-8">
           {/* Sol taraf: Ürünler */}
-          <div className="w-[70%]">
+          <div className="w-full lg:w-[70%]">
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
               <table className="w-full text-sm text-left rtl:text-right text-black">
                 <thead className="text-[14px] uppercase text-zinc-200 bg-slate-700">
@@ -89,7 +89,7 @@ const Basket = () => {
           </div>
 
           {/* Sağ taraf: Özet */}
-          <div className="w-[30%] bg-slate-700 p-6 text-white rounded-lg shadow-md h-fit">
+          <div className="w-full lg:w-[30%] bg-slate-700 p-6 text-white rounded-lg shadow-md h-fit">
             <h2 className="text-xl font-bold mb-4">Sipariş Özeti</h2>
             <div className="flex justify-between mb-2">
               <span>Toplam Ürün:</span>

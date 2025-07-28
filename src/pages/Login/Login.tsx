@@ -2,28 +2,28 @@ import { useState } from "react";
 import { login } from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../Context/UserContext";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { Login } = useUser();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
-
+    setIsLoading(true);
     try {
       const response = await login(email, password);
       const token = response.token;
       Login(token);
-
-      navigate("/");
+      toast.success("Giriş yapıldı.");
     } catch (err) {
-      console.error(err);
-      setError("Giriş başarısız! Lütfen bilgilerinizi kontrol edin.");
+      toast.error("Giriş başarısız! Lütfen bilgilerinizi kontrol edin.");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -65,12 +65,8 @@ const Login = () => {
             type="submit"
             className="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold cursor-pointer"
           >
-            Giriş Yap
+            {isLoading ? "Giriş yapılıyor..." : "Giriş Yap"}
           </button>
-
-          {error && (
-            <p className="text-red-500 text-sm font-medium mt-2">{error}</p>
-          )}
         </form>
         <div className="flex flex-col justify-center items-center w-full">
           <p>Hala bir hesabın yok mu?</p>

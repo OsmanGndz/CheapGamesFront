@@ -15,6 +15,7 @@ import { CiLogout } from "react-icons/ci";
 import { MdFavorite, MdManageAccounts } from "react-icons/md";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import Spinner from "./Spinner";
+import { toast } from "react-toastify";
 
 // Hesabım, siparişlerim, favorilerim, çıkış yap
 const accountMenuValues = [
@@ -129,8 +130,13 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
 
   // Logout işlemi için ayrı fonksiyon
   const handleLogout = () => {
-    logout();
-    setIsPersonMenuOpen(false);
+    try {
+      logout();
+      setIsPersonMenuOpen(false);
+      toast.success("Çıkış yapıldı.");
+    } catch (error) {
+      toast.error("Çıkış yapılırken bir hata oluştu.");
+    }
   };
 
   // Account menu click handler
@@ -139,6 +145,15 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
       handleLogout();
     }
     setIsPersonMenuOpen(false);
+  };
+
+  const handleBasketClick = () => {
+    if (isAuthenticated) {
+      navigate("/basket");
+    } else {
+      toast.error("Sepete erişmek için önce giriş yapmalısınız.");
+      navigate("/login");
+    }
   };
 
   return (
@@ -320,6 +335,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
             )}
             <Link
               to={`${isAuthenticated ? "/basket" : "/login"}`}
+              onClick={handleBasketClick}
               rel="noopener noreferer"
               className="cursor-pointer"
             >
@@ -356,9 +372,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
               to={`${isAuthenticated ? "/basket" : "/login"}`}
               rel="noopener noreferer"
               className="flex gap-4 items-center cursor-pointer"
-              onClick={() =>
-                isAuthenticated ? navigate("/basket") : navigate("/login")
-              }
+              onClick={handleBasketClick}
             >
               <LuShoppingBasket className="text-[30px]" />
             </Link>

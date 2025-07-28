@@ -212,7 +212,7 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
       ) : (
         <div className="hidden md:flex w-[30%] xl:w-[20%] flex-col gap-3">
           <h1 className="text-[25px] font-semibold">
-            {platform ? platform + " PC Oyunları" : category}
+            {platform ?  "PC - " + platform : category}
             {discounts ? "Kampanyalar" : ""}
           </h1>
           <div className="flex flex-col items-center gap-2 text-[20px] font-semibold">
@@ -232,7 +232,7 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
 
       <div className="w-full md:w-[70%] xl:w-[80%] p-4 md:border-l border-zinc-200 flex flex-col gap-4">
         <h1 className="flex md:hidden w-full text-center justify-center text-3xl font-semibold mb-8">
-          {platform ? platform + " PC Oyunları" : category}
+          {platform ?  " PC - " + platform  : category}
         </h1>
         <div>
           <SortFilter
