@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <AppRoutes />
-      <ToastContainer position="top-right" autoClose={4000} theme="dark" />
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
     </>
   );
 }

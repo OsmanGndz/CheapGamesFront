@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../Context/UserContext";
 import { useBasket } from "../Context/BasketContext";
 import { toast } from "react-toastify";
+import { FaHeartBroken } from "react-icons/fa";
 
 interface GameCardProps {
   Id: number;
@@ -21,6 +22,8 @@ interface GameCardProps {
   minWidth?: string;
   path?: string;
   onAddToCart?: (gameData: GameCardProps) => void;
+  isFavoriteMode?: boolean;
+  onRemoveFromFavorites?: (gameId: number) => void;
 }
 
 const GameCard: React.FC<GameCardProps> = ({
@@ -39,11 +42,13 @@ const GameCard: React.FC<GameCardProps> = ({
   minWidth = "90px",
   path,
   onAddToCart,
+  isFavoriteMode = false,
+  onRemoveFromFavorites,
 }) => {
   const { isAuthenticated } = useUser();
   const { isInBasket, RemoveFromBasket } = useBasket();
   const navigate = useNavigate();
-  const originalPrice = gamePrice / (1 - gameDiscount / 100);
+  const originalPrice = gamePrice - gamePrice * (gameDiscount / 100);
   const gameData = {
     Id,
     gameName,
@@ -62,7 +67,7 @@ const GameCard: React.FC<GameCardProps> = ({
     e.stopPropagation(); // Kart tıklamasını engelle
     if (!isAuthenticated) {
       navigate("/login");
-      toast.error("Sepete eklemeden önce giriş yapmalısınız.")
+      toast.error("Sepete eklemeden önce giriş yapmalısınız.");
     } else {
       if (onAddToCart) {
         onAddToCart(gameData);
@@ -76,6 +81,12 @@ const GameCard: React.FC<GameCardProps> = ({
       navigate("/login");
     } else {
       RemoveFromBasket(Id);
+    }
+  };
+
+  const handleRemoveFromFavories = (id: number) => {
+    if (onRemoveFromFavorites) {
+      onRemoveFromFavorites(id);
     }
   };
 
@@ -112,19 +123,30 @@ const GameCard: React.FC<GameCardProps> = ({
             {gameName}
           </span>
           <div className="flex flex-col items-center justify-center w-full font-bold mt-auto">
-            <span className="text-sm text-white whitespace-nowrap">
-              {gamePrice === 0 ? "Ücretsiz" : `${gamePrice.toFixed(2)} TL`}
-            </span>
             {gameDiscount > 0 && gamePrice > 0 && (
-              <span className="text-xs font-normal text-zinc-400 line-through whitespace-nowrap">
+              <span className="text-sm text-white whitespace-nowrap ">
                 {originalPrice.toFixed(2)} TL
               </span>
             )}
+            <span className={`${gameDiscount >0 && gamePrice > 0 ? "text-xs font-normal text-zinc-400 line-through":""} whitespace-nowrap`}>
+              {gamePrice === 0 ? "Ücretsiz" : `${gamePrice.toFixed(2)} TL`}
+            </span>
           </div>
         </div>
       </Link>
 
-      {!isInBasket(Id) ? (
+      {isFavoriteMode ? (
+        <div className="absolute bottom-0 flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-red-600 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer ">
+          <button
+            onClick={() => handleRemoveFromFavories(Id)}
+            className="flex items-center justify-center w-full h-full hover:text-white transition-colors duration-200 cursor-pointer gap-2"
+            aria-label="Favorilerden Çıkar"
+          >
+            <FaHeartBroken className="text-lg" />
+            <span className="text-white font-semibold">Favorilerden Çıkar</span>
+          </button>
+        </div>
+      ) : !isInBasket(Id) ? (
         <div className="absolute bottom-0 flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer ">
           <button
             onClick={handleAddToCart}

@@ -116,9 +116,14 @@ export const fetchPastOrder = async ()=> {
 
 }
 
-export const fetchFavories = async ()=> {
+export const fetchFavories = async (page:number, pageSize:number)=> {
   try {
-    const response = await api.get("/favorite")
+    const response = await api.get("/favorite",{
+      params:{
+        page:page,
+        pageSize: pageSize
+      }
+    })
     return response.data
   } catch (error) {
     console.log(error)
@@ -130,6 +135,23 @@ export const AddFavorite = async (id:number)=>{
   try {
     const response = await api.post("/favorite",id)
     return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const RemoveFavorite = async (id:number)=>{
+  try {
+    await api.delete(`/favorite/${id}`)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const IsFavorite = async (id:number)=>{
+  try {
+    const response = await api.get(`/favorite/${id}`)
+    return response.data;
   } catch (error) {
     console.log(error)
   }

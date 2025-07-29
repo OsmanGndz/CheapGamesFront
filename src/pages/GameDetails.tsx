@@ -2,36 +2,56 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { fetchGameById } from "../services/GameService";
 import { useEffect, useState } from "react";
-import { FaArrowDown, FaHeart } from "react-icons/fa";
+import { FaArrowDown, FaHeart, FaHeartBroken } from "react-icons/fa";
 import { TbBasketMinus, TbBasketPlus } from "react-icons/tb";
 import Spinner from "../components/Spinner";
 import { useBasket } from "../Context/BasketContext";
-import { AddFavorite } from "../services/AuthService";
+import {
+  AddFavorite,
+  RemoveFavorite,
+  IsFavorite,
+} from "../services/AuthService";
 
 const GameDetails = () => {
   const { id } = useParams();
   const [showMore, setShowMore] = useState(false);
   const { AddToBasket, RemoveFromBasket, isInBasket } = useBasket();
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["gameDetails", id],
-    queryFn: () => fetchGameById(Number(id)),
-    enabled: !!id, // Only run the query if id is available
-  });
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   const handleAddToBasket = () => {
-    AddToBasket({ ...data, Id: data.id });
+    if (data) {
+      AddToBasket({ ...data, Id: data.id });
+    }
   };
 
   const handleRemoveFromBasket = () => {
     RemoveFromBasket(Number(id));
   };
 
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["gameDetails", id],
+    queryFn: () => fetchGameById(Number(id)),
+    enabled: !!id,
+  });
+
+  const handleIsFavorite = async () => {
+    const response = await IsFavorite(Number(id));
+    setIsFavorite(response);
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    handleIsFavorite();
+  }, []);
+
   const AddToFavorites = async (id: number) => {
     await AddFavorite(id);
+    handleIsFavorite();
+  };
+
+  const RemoveFromFavorites = async (id: number) => {
+    await RemoveFavorite(id);
+    handleIsFavorite();
   };
 
   return (
@@ -90,19 +110,20 @@ const GameDetails = () => {
             </div>
             <div className="flex flex-col gap-4 w-full sm:w-[60%] mt-8">
               <div className="flex items-center w-full font-bold bg-slate-800 rounded-md p-4 gap-2">
-                <span className="text-2xl text-white whitespace-nowrap">
+                {data.gameDiscount > 0 && data.gamePrice > 0 && (
+                  <span className=" text-2xl text-white whitespace-nowrap  ">
+                    {(
+                      data.gamePrice -
+                      (data.gamePrice * data.gameDiscount) / 100
+                    ).toFixed(2)}{" "}
+                    TL
+                  </span>
+                )}
+                <span className="text-lg text-zinc-400 line-through whitespace-nowrap">
                   {data.gamePrice === 0
                     ? "Ücretsiz"
                     : `${data.gamePrice.toFixed(2)} TL`}
                 </span>
-                {data.gameDiscount > 0 && data.gamePrice > 0 && (
-                  <span className="text-lg text-zinc-400 line-through whitespace-nowrap">
-                    {(data.gamePrice / (1 - data.gameDiscount / 100)).toFixed(
-                      2
-                    )}{" "}
-                    TL
-                  </span>
-                )}
               </div>
               <div className="flex flex-col gap-2 bg-slate-800 rounded-md p-4">
                 <h2 className="text-xl font-semibold">Oyun Bilgileri</h2>
@@ -134,13 +155,23 @@ const GameDetails = () => {
                     Sepetten Çıkar
                   </button>
                 )}
-                <button
-                  className="flex justify-center items-center gap-2 w-full  bg-slate-800 text-zinc-200 hover:text-gray-700 py-2 rounded-md hover:bg-zinc-100 border border-white hover:border-black hover:shadow-md hover:shadow-pink-500 cursor-pointer transition-colors duration-300"
-                  onClick={() => AddToFavorites(data.id)}
-                >
-                  <FaHeart className="text-[16px] sm:text-lg text-red-500" />
-                  Favorilere Ekle
-                </button>
+                {isFavorite ? (
+                  <button
+                    className="flex justify-center items-center gap-2 w-full bg-red-500 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300"
+                    onClick={() => RemoveFromFavorites(data.id)}
+                  >
+                    <FaHeartBroken className="text-lg" />
+                    Favorilerden Çıkar
+                  </button>
+                ) : (
+                  <button
+                    className="flex justify-center items-center gap-2 w-full  bg-slate-800 text-zinc-200 hover:text-gray-700 py-2 rounded-md hover:bg-zinc-100 border border-white hover:border-black hover:shadow-md hover:shadow-pink-500 cursor-pointer transition-colors duration-300"
+                    onClick={() => AddToFavorites(data.id)}
+                  >
+                    <FaHeart className="text-[16px] sm:text-lg text-red-500" />
+                    Favorilere Ekle
+                  </button>
+                )}
               </div>
             </div>
           </div>

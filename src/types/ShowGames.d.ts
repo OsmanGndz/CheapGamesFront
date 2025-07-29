@@ -22,6 +22,8 @@ export interface ShowGamesProps {
         pageSize: number;
     };
     setPageInfo?: React.Dispatch<React.SetStateAction<ShowGamesProps['pageInfo']>>;
+    isFavoriteMode?: boolean;
+    onRemoveFromFavorites?: (gameId: number) => void;
 }
 
 export interface FilterGameProps {

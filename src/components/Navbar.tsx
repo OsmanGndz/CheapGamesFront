@@ -16,6 +16,7 @@ import { MdFavorite, MdManageAccounts } from "react-icons/md";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify";
+import { useBasket } from "../Context/BasketContext";
 
 // Hesabım, siparişlerim, favorilerim, çıkış yap
 const accountMenuValues = [
@@ -59,7 +60,15 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
   const desktopSearchRef = useRef<HTMLDivElement>(null);
   const personMenuRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, logout } = useUser();
+  const { GetBasketIds } = useBasket();
   const [isPersonMenuOpen, setIsPersonMenuOpen] = useState<boolean>(false);
+  const [basketNumber, setBasketNumebr] = useState<number>(
+    GetBasketIds().length || 0
+  );
+
+  useEffect(() => {
+    setBasketNumebr(GetBasketIds().length);
+  }, [GetBasketIds]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["searchGames", search],
@@ -337,8 +346,11 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
               to={`${isAuthenticated ? "/basket" : "/login"}`}
               onClick={handleBasketClick}
               rel="noopener noreferer"
-              className="cursor-pointer"
+              className="cursor-pointer relative"
             >
+              <p className="absolute bg-red-500 rounded-full px-1 text-[10px] -right-1">
+                {basketNumber}
+              </p>
               <LuShoppingBasket className="text-[26px] hover:text-blue-400" />
             </Link>
           </div>
@@ -371,9 +383,12 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
             <Link
               to={`${isAuthenticated ? "/basket" : "/login"}`}
               rel="noopener noreferer"
-              className="flex gap-4 items-center cursor-pointer"
+              className="flex gap-4 items-center cursor-pointer relative"
               onClick={handleBasketClick}
             >
+              <p className="absolute bg-red-500 rounded-full px-1 text-[10px] top-0 right-0">
+                {basketNumber}
+              </p>
               <LuShoppingBasket className="text-[30px]" />
             </Link>
           </div>

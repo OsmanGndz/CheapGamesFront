@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { useBasket } from "./BasketContext";
+import { toast } from "react-toastify";
 
 interface DecodedToken {
   exp: number;
@@ -23,6 +24,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useNavigate();
   const { ResetBasket } = useBasket();
 
@@ -40,7 +42,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         setTimeout(() => logout(), timeUntilExpiration);
       }
     } catch (error) {
-      console.error("Token çözümleme hatası:", error);
+      toast.error("Token çözümlenirken hata oluştu.");
       logout();
     }
   };
@@ -51,6 +53,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       const parsedToken: string = JSON.parse(stroredToken);
       checkTokenExpiration(parsedToken);
       setToken(parsedToken);
+      setIsAuthenticated(true);
     }
     setIsLoading(false);
   }, []);
@@ -61,6 +64,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     checkTokenExpiration(token);
 
     setToken(token);
+    setIsAuthenticated(true);
   };
 
   const logout = () => {
@@ -69,13 +73,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     setToken(null);
     navigate("/");
     ResetBasket();
+    setIsAuthenticated(false);
   };
 
   const value: UserContextType = {
     token,
     Login,
     logout,
-    isAuthenticated: !!token,
+    isAuthenticated,
     isLoading, // yeni eklenen
   };
 
