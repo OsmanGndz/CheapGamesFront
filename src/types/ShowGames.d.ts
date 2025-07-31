@@ -24,6 +24,7 @@ export interface ShowGamesProps {
     setPageInfo?: React.Dispatch<React.SetStateAction<ShowGamesProps['pageInfo']>>;
     isFavoriteMode?: boolean;
     onRemoveFromFavorites?: (gameId: number) => void;
+    isUserProductsMode?:boolean;
 }
 
 export interface FilterGameProps {

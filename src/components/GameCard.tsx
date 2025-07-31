@@ -5,6 +5,7 @@ import { useUser } from "../Context/UserContext";
 import { useBasket } from "../Context/BasketContext";
 import { toast } from "react-toastify";
 import { FaHeartBroken } from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 
 interface GameCardProps {
   Id: number;
@@ -24,6 +25,7 @@ interface GameCardProps {
   onAddToCart?: (gameData: GameCardProps) => void;
   isFavoriteMode?: boolean;
   onRemoveFromFavorites?: (gameId: number) => void;
+  isUserProductsMode?: boolean;
 }
 
 const GameCard: React.FC<GameCardProps> = ({
@@ -44,8 +46,9 @@ const GameCard: React.FC<GameCardProps> = ({
   onAddToCart,
   isFavoriteMode = false,
   onRemoveFromFavorites,
+  isUserProductsMode,
 }) => {
-  const { isAuthenticated } = useUser();
+  const { isAuthenticated, IsOwned } = useUser();
   const { isInBasket, RemoveFromBasket } = useBasket();
   const navigate = useNavigate();
   const originalPrice = gamePrice - gamePrice * (gameDiscount / 100);
@@ -128,8 +131,14 @@ const GameCard: React.FC<GameCardProps> = ({
                 {originalPrice.toFixed(2)} TL
               </span>
             )}
-            <span className={`${gameDiscount >0 && gamePrice > 0 ? "text-xs font-normal text-zinc-400 line-through":""} whitespace-nowrap`}>
-              {gamePrice === 0 ? "Ücretsiz" : `${gamePrice.toFixed(2)} TL`}
+            <span
+              className={`${
+                gameDiscount > 0 && gamePrice > 0
+                  ? "text-xs font-normal text-zinc-400 line-through"
+                  : ""
+              } whitespace-nowrap`}
+            >
+              {gamePrice === 0 ? "Ücretsiz" : `${gamePrice?.toFixed(2)} TL`}
             </span>
           </div>
         </div>
@@ -145,6 +154,13 @@ const GameCard: React.FC<GameCardProps> = ({
             <FaHeartBroken className="text-lg" />
             <span className="text-white font-semibold">Favorilerden Çıkar</span>
           </button>
+        </div>
+      ) : isUserProductsMode ? (
+        <div></div>
+      ) : IsOwned(Id) ? (
+        <div className="absolute bottom-0 flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer ">
+          <FaCheckCircle className="text-green-400 text-lg mr-2" />
+          <span className="text-green-400 font-semibold">Ürünlerinde</span>
         </div>
       ) : !isInBasket(Id) ? (
         <div className="absolute bottom-0 flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer ">

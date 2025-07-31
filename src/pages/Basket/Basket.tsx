@@ -3,11 +3,14 @@ import { useBasket } from "../../Context/BasketContext";
 import { useEffect, useState } from "react";
 import { CompleteOrderApi } from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useUser } from "../../Context/UserContext";
 
 const Basket = () => {
   const { basket, RemoveFromBasket, GetBasketIds, ResetBasket } = useBasket();
   const [gameIds, setGameIds] = useState<number[]>(GetBasketIds() || []);
   const navigate = useNavigate();
+  const { getMyGames } = useUser();
 
   const totalPrice = basket.reduce((sum, item) => sum + item.price, 0);
   const totalItems = basket.length;
@@ -16,13 +19,15 @@ const Basket = () => {
     setGameIds(GetBasketIds());
   }, [basket]);
 
-  const CompleteOrder = () => {
+  const CompleteOrder = async () => {
     try {
-      CompleteOrderApi(gameIds);
+      await CompleteOrderApi(gameIds);
       ResetBasket();
       navigate("/");
+      getMyGames();
+      toast.success("Sipariş verildi.");
     } catch (error) {
-      console.error(error);
+      toast.error("Sipariş verilirken bir hata oluştu.");
     }
   };
 
@@ -72,7 +77,22 @@ const Basket = () => {
                         />
                       </td>
                       <td className="px-6 py-4">{item.name}</td>
-                      <td className="px-6 py-4">₺{item.price.toFixed(2)}</td>
+                      <td className="px-6 py-4">
+                        {item.discount > 0 ? (
+                          <div className="flex gap-2">
+                            <p>
+                              ₺
+                              {(
+                                item.price -
+                                item.price * (item.discount / 100)
+                              ).toFixed(2)}
+                            </p>
+                            <p className="line-through text-gray-600">₺{item.price.toFixed(2)}</p>
+                          </div>
+                        ) : (
+                          <p>₺{item.price.toFixed(2)}</p>
+                        )}
+                      </td>
                       <td className="px-6 py-4 w-20">
                         <div className="bg-red-600 w-12 h-12 hover:scale-110 transform-content duration-500 flex items-center justify-center cursor-pointer rounded-full">
                           <FaTrash
@@ -101,7 +121,7 @@ const Basket = () => {
             </div>
             <hr className="my-4 border-gray-400" />
             <button
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition"
+              className="w-full cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition"
               onClick={CompleteOrder}
             >
               Alışverişi Tamamla

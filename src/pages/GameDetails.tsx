@@ -1,8 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchGameById } from "../services/GameService";
 import { useEffect, useState } from "react";
-import { FaArrowDown, FaHeart, FaHeartBroken } from "react-icons/fa";
+import {
+  FaArrowDown,
+  FaCheckCircle,
+  FaHeart,
+  FaHeartBroken,
+} from "react-icons/fa";
 import { TbBasketMinus, TbBasketPlus } from "react-icons/tb";
 import Spinner from "../components/Spinner";
 import { useBasket } from "../Context/BasketContext";
@@ -11,13 +16,16 @@ import {
   RemoveFavorite,
   IsFavorite,
 } from "../services/AuthService";
+import { useUser } from "../Context/UserContext";
+import { toast } from "react-toastify";
 
 const GameDetails = () => {
   const { id } = useParams();
   const [showMore, setShowMore] = useState(false);
   const { AddToBasket, RemoveFromBasket, isInBasket } = useBasket();
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-
+  const { IsOwned, logout, isAuthenticated } = useUser();
+  const navigate = useNavigate();
   const handleAddToBasket = () => {
     if (data) {
       AddToBasket({ ...data, Id: data.id });
@@ -35,16 +43,28 @@ const GameDetails = () => {
   });
 
   const handleIsFavorite = async () => {
-    const response = await IsFavorite(Number(id));
-    setIsFavorite(response);
+    try {
+      const response = await IsFavorite(Number(id));
+      setIsFavorite(response);
+    } catch (error) {
+      toast.error("Favori ürünleriniz yüklenirken bir hata oluştu.");
+    }
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    handleIsFavorite();
-  }, []);
+    if (!isAuthenticated) {
+      setIsFavorite(false);
+    } else {
+      handleIsFavorite();
+    }
+  }, [logout, isAuthenticated]);
 
   const AddToFavorites = async (id: number) => {
+    if (!isAuthenticated) {
+      toast.error("Favorilere ekleme yapmak için önce giriş yapmalısınız.");
+      navigate("/login");
+    }
     await AddFavorite(id);
     handleIsFavorite();
   };
@@ -138,7 +158,12 @@ const GameDetails = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                {!isInBasket(Number(id)) ? (
+                {IsOwned(Number(id)) ? (
+                  <div className="flex justify-center items-center gap-2 w-full bg-green-700 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300">
+                    <FaCheckCircle className="text-white text-lg mr-2" />
+                    Ürünlerinde
+                  </div>
+                ) : !isInBasket(Number(id)) ? (
                   <button
                     className="flex justify-center items-center gap-2 w-full bg-blue-400 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300"
                     onClick={handleAddToBasket}

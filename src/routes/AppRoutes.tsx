@@ -13,6 +13,7 @@ import Order from "../pages/Order/Order";
 import NotFound from "../pages/NotFound/NotFound";
 import Favories from "../pages/Favories/Favories";
 import AccountMobile from "../pages/Account/AccountMobile";
+import UserProducts from "../pages/UserProducts/UserProducts";
 
 function AppRoutes() {
   const { isAuthenticated } = useUser();
@@ -68,7 +69,11 @@ function AppRoutes() {
             <Route path="/basket" element={<Basket key="basket" />} />
             <Route path="/my-orders" element={<Order key="order" />} />
             <Route path="favories" element={<Favories key="favories" />} />
-            <Route path="/accountMobile" element={<AccountMobile key="accountMobile" />} />
+            <Route
+              path="/accountMobile"
+              element={<AccountMobile key="accountMobile" />}
+            />
+            <Route path="my-products" element={<UserProducts />} />
           </Route>
         )}
 

@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { useBasket } from "./BasketContext";
 import { toast } from "react-toastify";
+import { fetchMyProductIds } from "../services/AuthService";
 
 interface DecodedToken {
   exp: number;
@@ -15,6 +16,8 @@ interface UserContextType {
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
+  getMyGames: () => void;
+  IsOwned: (id: number) => boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -27,6 +30,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useNavigate();
   const { ResetBasket } = useBasket();
+  const [userGameIds, setUserGameIds] = useState<number[]>([]);
 
   // Token süresini kontrol et ve süresi dolmuşsa logout yap
   const checkTokenExpiration = (token: string) => {
@@ -47,6 +51,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const getMyGames = async () => {
+    const data = await fetchMyProductIds();
+    setUserGameIds(data);
+  };
+
   useEffect(() => {
     const stroredToken = localStorage.getItem("token");
     if (stroredToken) {
@@ -54,15 +63,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       checkTokenExpiration(parsedToken);
       setToken(parsedToken);
       setIsAuthenticated(true);
+      getMyGames();
     }
     setIsLoading(false);
   }, []);
 
-  const Login = (token: string) => {
+  const Login = async (token: string) => {
     navigate("/", { replace: true });
     localStorage.setItem("token", JSON.stringify(token));
     checkTokenExpiration(token);
-
+    await getMyGames();
     setToken(token);
     setIsAuthenticated(true);
   };
@@ -74,6 +84,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     navigate("/");
     ResetBasket();
     setIsAuthenticated(false);
+    setUserGameIds([]);
+  };
+
+  const IsOwned = (id: number) => {
+    return userGameIds?.includes(id);
   };
 
   const value: UserContextType = {
@@ -81,7 +96,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     Login,
     logout,
     isAuthenticated,
-    isLoading, // yeni eklenen
+    isLoading,
+    getMyGames,
+    IsOwned,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

@@ -30,6 +30,7 @@ const ShowGames: React.FC<ShowGamesProps> = ({
   setPageInfo,
   isFavoriteMode,
   onRemoveFromFavorites,
+  isUserProductsMode,
 }) => {
   const { AddToBasket } = useBasket();
 
@@ -69,6 +70,7 @@ const ShowGames: React.FC<ShowGamesProps> = ({
                 onAddToCart={handleAddToCart}
                 isFavoriteMode={isFavoriteMode}
                 onRemoveFromFavorites={onRemoveFromFavorites}
+                isUserProductsMode={isUserProductsMode}
               />
             );
           })}

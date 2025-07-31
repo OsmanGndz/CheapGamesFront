@@ -20,6 +20,7 @@ interface GameType {
   image: string;
   name: string;
   price: number;
+  discount: number;
 }
 
 interface BasketContextType {
@@ -53,14 +54,15 @@ export const BasketProvider: React.FC<{ children: React.ReactNode }> = ({
       name: game.gameName,
       image: game.gameImage,
       price: game.gamePrice,
+      discount: game.gameDiscount,
     };
     setBasket((prev) => [...prev, newItem]);
-    toast.success("Oyun başarılı şekilde sepetinize eklendi.")
+    toast.success("Oyun başarılı şekilde sepetinize eklendi.");
   };
 
   const RemoveFromBasket = (id: number) => {
     setBasket((prev) => prev.filter((g) => g.id !== id));
-    toast.success("Oyun başarılı şekilde sepetinizden kaldırıldı.")
+    toast.success("Oyun başarılı şekilde sepetinizden kaldırıldı.");
   };
 
   const GetBasketIds = () => {

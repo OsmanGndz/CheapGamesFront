@@ -156,3 +156,26 @@ export const IsFavorite = async (id:number)=>{
     console.log(error)
   }
 }
+
+export const fetchMyProducts = async (page:number, pageSize:number)=>{
+  try {
+    const response = await api.get(`/product`,{
+      params:{
+        page:page,
+        pageSize: pageSize
+      }
+    })
+    return response.data;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const fetchMyProductIds = async ()=>{
+  try {
+    const response = await api.get(`/product/product-ids`)
+    return response.data;
+  } catch (error) {
+    console.log(error)
+  }
+}
