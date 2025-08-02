@@ -158,12 +158,20 @@ const GameCard: React.FC<GameCardProps> = ({
       ) : isUserProductsMode ? (
         <div></div>
       ) : IsOwned(Id) ? (
-        <div className="absolute bottom-0 flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer ">
-          <FaCheckCircle className="text-green-400 text-lg mr-2" />
-          <span className="text-green-400 font-semibold">Ürünlerinde</span>
-        </div>
+        <>
+          {/* lg ve üstü: hover ile altta */}
+          <div className="absolute bottom-0  justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer hidden lg:flex">
+            <FaCheckCircle className="text-green-400 text-lg mr-2" />
+            <span className="text-green-400 font-semibold">Ürünlerinde</span>
+          </div>
+          {/* lg altı: sol üst köşede çapraz */}
+          <div className="absolute bottom-20 h-8 bg-green-500 text-white px-4 py-1 text-xs font-bold items-center shadow-lg flex lg:hidden z-30 w-full text-center justify-center itemes-center rounded-t-md">
+            <FaCheckCircle className="text-white mr-1" />
+            Ürünlerinde
+          </div>
+        </>
       ) : !isInBasket(Id) ? (
-        <div className="absolute bottom-0 flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer ">
+        <div className="absolute bottom-0 justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer hidden lg:flex">
           <button
             onClick={handleAddToCart}
             className="flex items-center justify-center w-full h-full hover:text-blue-400 transition-colors duration-200 cursor-pointer"
@@ -173,7 +181,7 @@ const GameCard: React.FC<GameCardProps> = ({
           </button>
         </div>
       ) : (
-        <div className="absolute bottom-0 flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-red-600 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer ">
+        <div className="absolute bottom-0 justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-red-600 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer hidden lg:flex">
           <button
             onClick={handleRemoveFromCart}
             className="flex items-center justify-center w-full h-full hover:text-blue-400 transition-colors duration-200 cursor-pointer"

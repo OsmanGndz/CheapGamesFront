@@ -292,7 +292,26 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                         />
                         <div className="flex flex-col pt-2 gap-1">
                           <h1 className="font-bold">{game.gameName}</h1>
-                          <p className="text-gray-600">{game.gamePrice} TL</p>
+                          <div className="flex gap-2">
+                            {game.gameDiscount > 0 && (
+                              <p className="text-black ">
+                                {(
+                                  game.gamePrice -
+                                  game.gamePrice * (game.gameDiscount / 100)
+                                ).toFixed(2)}{" "}
+                                TL
+                              </p>
+                            )}
+                            <p
+                              className={`${
+                                game.gameDiscount > 0
+                                  ? "text-gray-600 line-through"
+                                  : "text-black"
+                              }`}
+                            >
+                              {game.gamePrice} TL
+                            </p>
+                          </div>
                         </div>
                       </li>
                     ))
@@ -439,7 +458,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                           {data.games.map((game: any, index: number) => (
                             <div
                               key={`${game.id}-${index}`}
-                              className="flex gap-3 cursor-pointer hover:bg-blue-400 p-3 rounded-lg transition-all duration-200 mb-1 active:bg-blue-500 h-24"
+                              className="flex gap-3 cursor-pointer hover:bg-blue-400 p-3 rounded-lg transition-all duration-200 mb-1 active:bg-blue-500 h-24 justify-center"
                               onTouchEnd={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -450,7 +469,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                                 <img
                                   src={game.gameImage}
                                   alt={game.gameName}
-                                  className="w-12 h-12 object-cover rounded"
+                                  className="w-12 h-18 object-cover rounded"
                                   draggable={false}
                                 />
                               </div>
@@ -458,9 +477,27 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                                 <h3 className="font-bold text-sm truncate text-gray-900">
                                   {game.gameName}
                                 </h3>
-                                <p className="text-gray-600 text-xs">
-                                  {game.gamePrice} TL
-                                </p>
+                                <div className="flex gap-2">
+                                  {game.gameDiscount > 0 && (
+                                    <p className="text-black ">
+                                      {(
+                                        game.gamePrice -
+                                        game.gamePrice *
+                                          (game.gameDiscount / 100)
+                                      ).toFixed(2)}{" "}
+                                      TL
+                                    </p>
+                                  )}
+                                  <p
+                                    className={`${
+                                      game.gameDiscount > 0
+                                        ? "text-gray-600 line-through"
+                                        : "text-black"
+                                    }`}
+                                  >
+                                    {game.gamePrice.toFixed(2)} TL
+                                  </p>
+                                </div>
                               </div>
                             </div>
                           ))}

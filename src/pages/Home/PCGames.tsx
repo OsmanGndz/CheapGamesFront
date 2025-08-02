@@ -13,7 +13,7 @@ const PCGames = () => {
     queryKey: ["pcGames", filter],
     queryFn: () =>
       fetchGamesByAllFilter({
-        Category: "computer",
+        Category: "Computer",
         Platform: filter === "Hepsi" ? "Tüm Ürünler" : filter,
         pageSize: 12,
       }),

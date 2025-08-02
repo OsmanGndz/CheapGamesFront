@@ -46,7 +46,7 @@ export const fetchGamesByAllFilter = async ({
   if (Platform ==="Tüm Ürünler"){
     const response = await api.get("/game/all-filter",{
       params: {
-        Category : "computer",
+        Category : "Computer",
         minPrice: minPrice,
         maxPrice: maxPrice,
         page: page,
@@ -76,7 +76,7 @@ export const fetchPriceRange = async (category:string | null, platform:string | 
   if(platform === "Tüm Ürünler" || platform === "Hepsi"){
     const response = await api.get("/game/priceRange", {
     params: {
-      categoryName: "computer",
+      categoryName: "Computer",
     }
   });
     return response.data;
@@ -99,10 +99,14 @@ export const fetchGameById = async (id:number) =>{
 
 export const fetchSearchedGames = async (searchTerm:string) =>{
   
-  const response = await api.get("/game/searchGame",{
-    params: {
-      searchTerm: searchTerm
-    }
-  });
-  return response.data.result;
+  try {
+    const response = await api.get("/game/searchGame",{
+      params: {
+        searchTerm: searchTerm
+      }
+    });
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 }

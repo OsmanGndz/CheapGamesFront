@@ -205,7 +205,7 @@ const All: React.FC<AllProps> = ({ platform, category, discounts = false }) => {
   }
 
   return (
-    <div className="flex w-full md:px-12 lg:px-20 xl:px-24 bg-gray-900 text-white min-h-screen gap-4">
+    <div className="flex w-full px-0 lg:px-20 xl:px-24 bg-gray-900 text-white min-h-screen gap-4">
       {isLoading || !data ? (
         <Spinner
           className="flex justify-center w-[30%] pt-20"

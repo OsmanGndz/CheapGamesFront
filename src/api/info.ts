@@ -1,17 +1,26 @@
 import axios from "axios";
 
-const token = localStorage.getItem("token")
-  ? JSON.parse(localStorage.getItem("token")!)
-  : null;
-
-
 const api = axios.create({
-  baseURL: "https://localhost:7238/api", // Backend base URL
+  baseURL: `${import.meta.env.VITE_API_URL}/api`,
   headers: {
     "Content-Type": "application/json",
-    "Authorization": token ? `Bearer ${token}` : "",
   },
-  withCredentials: false, // Eğer çerez kullanacaksan true yapabilirsin
+  withCredentials: false,
 });
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token")
+      ? JSON.parse(localStorage.getItem("token")!)
+      : null;
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    } else {
+      delete config.headers["Authorization"];
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export default api;
