@@ -87,7 +87,9 @@ const Basket = () => {
                                 item.price * (item.discount / 100)
                               ).toFixed(2)}
                             </p>
-                            <p className="line-through text-gray-600">₺{item.price.toFixed(2)}</p>
+                            <p className="line-through text-gray-600">
+                              ₺{item.price.toFixed(2)}
+                            </p>
                           </div>
                         ) : (
                           <p>₺{item.price.toFixed(2)}</p>

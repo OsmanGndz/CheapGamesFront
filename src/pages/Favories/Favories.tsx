@@ -4,6 +4,7 @@ import ShowGames from "../../components/ShowGames";
 import { useSearchParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import type { ShowGamesProps } from "../../types/ShowGames";
+import { toast } from "react-toastify";
 
 const Favories = () => {
   const queryClient = useQueryClient();
@@ -38,8 +39,13 @@ const Favories = () => {
   });
 
   const RemoveFromFavories = async (id: number) => {
-    await RemoveFavorite(id);
-    queryClient.invalidateQueries({ queryKey: ["favories"] });
+    try {
+      await RemoveFavorite(id);
+      queryClient.invalidateQueries({ queryKey: ["favories"] });
+      toast.success("Favori ürünlerinizden çıkarıldı.");
+    } catch (error) {
+      toast.error("Favori ürün silinirken bir hata oluştu.");
+    }
   };
 
   const { data, isLoading, error } = useQuery({

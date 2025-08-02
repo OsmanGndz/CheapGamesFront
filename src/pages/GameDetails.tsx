@@ -26,9 +26,16 @@ const GameDetails = () => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const { IsOwned, logout, isAuthenticated } = useUser();
   const navigate = useNavigate();
+
   const handleAddToBasket = () => {
-    if (data) {
-      AddToBasket({ ...data, Id: data.id });
+    if (isAuthenticated ) {
+      if(data){
+        AddToBasket({ ...data, Id: data.id });
+      }
+    }
+    else{
+      toast.error("Sepete eklemek için giriş yapmalısınız.");
+      navigate("/login");
     }
   };
 
@@ -66,13 +73,23 @@ const GameDetails = () => {
       navigate("/login");
     }
     await AddFavorite(id);
+    toast.success("Favori ürünlerinize eklendi.");
     handleIsFavorite();
   };
 
   const RemoveFromFavorites = async (id: number) => {
-    await RemoveFavorite(id);
-    handleIsFavorite();
+    try {
+      await RemoveFavorite(id);
+      handleIsFavorite();
+      toast.success("Favori ürünlerinizden çıkarıldı.");
+    } catch (error) {
+      toast.error("Favori ürün silinirken bir hata oluştu.");
+    }
   };
+
+  if (error) {
+    toast.error("Ürün detayları yüklenirken bir hata oluştu.");
+  }
 
   return (
     <div className="flex flex-col px-0 sm:px-8 md:px-20 lg:px-32 xl:px-40 py-4">
@@ -83,7 +100,6 @@ const GameDetails = () => {
           size="w-10 h-10"
         />
       )}
-      {error && <p>Error loading game details: {error.message}</p>}
       {data && (
         <div className="flex flex-col p-4 gap-8">
           {/*game name*/}

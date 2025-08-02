@@ -31,25 +31,25 @@ function AppRoutes() {
           <Route
             path="/pc-games/all"
             element={
-              <All key="all" platform="Tüm Ürünler" category="computer" />
+              <All key="all" platform="Tüm Ürünler" category="Computer" />
             }
           />
           <Route
             path="/pc-games/steam"
-            element={<All key="steam" platform="Steam" category="computer" />}
+            element={<All key="steam" platform="Steam" category="Computer" />}
           />
           <Route
             path="/pc-games/uplay"
-            element={<All key="uplay" platform="Uplay" category="computer" />}
+            element={<All key="uplay" platform="Uplay" category="Computer" />}
           />
           <Route
             path="/pc-games/ea-origin"
-            element={<All key="origin" platform="Origin" category="computer" />}
+            element={<All key="origin" platform="Origin" category="Computer" />}
           />
           <Route
             path="/pc-games/microsoft"
             element={
-              <All key="microsoft" platform="Microsoft" category="computer" />
+              <All key="microsoft" platform="Microsoft" category="Computer" />
             }
           />
           <Route

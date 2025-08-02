@@ -20,7 +20,11 @@ interface dataProps {
   releaseDate: string;
 }
 
-const MiniSlider: React.FC<MiniSliderProps> = ({ isloading, error, data }) => {
+const MiniSlider: React.FC<MiniSliderProps> = ({
+  isloading,
+  error,
+  data = [],
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState<number>(1);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -203,7 +207,7 @@ const MiniSlider: React.FC<MiniSliderProps> = ({ isloading, error, data }) => {
               gap: "0.5rem",
             }}
           >
-            {data.map((item, index) => {
+            {(Array.isArray(data) ? data : []).map((item, index) => {
               const { id, ...rest } = item as any;
               return (
                 <GameCard
