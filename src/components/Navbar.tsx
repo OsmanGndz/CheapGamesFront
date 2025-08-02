@@ -276,10 +276,6 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                 <div className="text-center flex justify-center items-center w-full">
                   <Spinner />
                 </div>
-              ) : error ? (
-                <p className="text-center text-red-500">
-                  Error: {error.message}
-                </p>
               ) : (
                 <ul className="h-full overflow-y-auto">
                   {data?.games?.length > 0 ? (
@@ -450,10 +446,6 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                   {isLoading ? (
                     <div className="p-4">
                       <p className="text-center">Loading...</p>
-                    </div>
-                  ) : error ? (
-                    <div className="p-4">
-                      <p className="text-center">Error fetching data</p>
                     </div>
                   ) : (
                     <>
