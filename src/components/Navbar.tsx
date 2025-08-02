@@ -165,6 +165,10 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
     }
   };
 
+  if (error) {
+    toast.error("Arama sonuçları yüklenirken bir hata oluştu.");
+  }
+
   return (
     <div className="flex flex-col w-full bg-slate-800">
       <div className="border-b-1 border-blue-400 ">
