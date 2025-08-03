@@ -12,7 +12,18 @@ const Basket = () => {
   const navigate = useNavigate();
   const { getMyGames } = useUser();
 
+  const totalDiscount = basket.reduce(
+    (sum, item) => sum + (item.price * item.discount) / 100,
+    0
+  );
+
+  const totalDiscountedPrice = basket.reduce(
+    (sum, item) => sum + (item.price - (item.price * item.discount) / 100),
+    0
+  );
+
   const totalPrice = basket.reduce((sum, item) => sum + item.price, 0);
+
   const totalItems = basket.length;
 
   useEffect(() => {
@@ -118,8 +129,19 @@ const Basket = () => {
               <span>{totalItems} adet</span>
             </div>
             <div className="flex justify-between mb-2">
+              <span>Toplam İndirim:</span>
+              <div className="flex gap-2 text-green-400">
+                <span>{totalDiscount.toFixed(2)} TL</span>
+              </div>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span>İndirimsiz Tutar:</span>
+
+              <span className="">{totalPrice.toFixed(2)} TL</span>
+            </div>
+            <div className="flex justify-between mb-2">
               <span>Toplam Tutar:</span>
-              <span>₺{totalPrice.toFixed(2)}</span>
+              <span>{totalDiscountedPrice.toFixed(2)} TL</span>
             </div>
             <hr className="my-4 border-gray-400" />
             <button
