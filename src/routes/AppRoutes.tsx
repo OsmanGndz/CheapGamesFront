@@ -14,6 +14,7 @@ import NotFound from "../pages/NotFound/NotFound";
 import Favories from "../pages/Favories/Favories";
 import AccountMobile from "../pages/Account/AccountMobile";
 import UserProducts from "../pages/UserProducts/UserProducts";
+import ProtectedRoute from "./ProtectedRoute";
 
 function AppRoutes() {
   const { isAuthenticated } = useUser();
@@ -63,19 +64,57 @@ function AppRoutes() {
             <Route path="/register" element={<Register />} />
           </Route>
         )}
-        {isAuthenticated && (
-          <Route element={<AuthLayout />}>
-            <Route path="/account" element={<Account />} />
-            <Route path="/basket" element={<Basket key="basket" />} />
-            <Route path="/my-orders" element={<Order key="order" />} />
-            <Route path="favories" element={<Favories key="favories" />} />
-            <Route
-              path="/accountMobile"
-              element={<AccountMobile key="accountMobile" />}
-            />
-            <Route path="my-products" element={<UserProducts />} />
-          </Route>
-        )}
+
+        <Route element={<AuthLayout />}>
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <Account />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/basket"
+            element={
+              <ProtectedRoute>
+                <Basket key="basket" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-orders"
+            element={
+              <ProtectedRoute>
+                <Order key="order" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="favories"
+            element={
+              <ProtectedRoute>
+                <Favories key="favories" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/accountMobile"
+            element={
+              <ProtectedRoute>
+                <AccountMobile key="accountMobile" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="my-products"
+            element={
+              <ProtectedRoute>
+                <UserProducts />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
 
         <Route path="/*" element={<NotFound />} />
       </Routes>

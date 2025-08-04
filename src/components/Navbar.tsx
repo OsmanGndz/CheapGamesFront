@@ -1,7 +1,11 @@
 import { ImCreditCard } from "react-icons/im";
 import { FaBoxOpen, FaInstagram, FaUser, FaUserPlus } from "react-icons/fa";
 import { GiTrophyCup } from "react-icons/gi";
-import { IoLogoGameControllerB, IoMdSearch } from "react-icons/io";
+import {
+  IoIosWarning,
+  IoLogoGameControllerB,
+  IoMdSearch,
+} from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { LuShoppingBasket, LuUserRoundCheck } from "react-icons/lu";
@@ -17,6 +21,7 @@ import { FaClockRotateLeft } from "react-icons/fa6";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify";
 import { useBasket } from "../Context/BasketContext";
+import { Modal } from "./Modal";
 
 // Hesabım, siparişlerim, favorilerim, çıkış yap
 const accountMenuValues = [
@@ -65,6 +70,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
   const [basketNumber, setBasketNumebr] = useState<number>(
     GetBasketIds().length || 0
   );
+  const [isPayOpen, setIsPayOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setBasketNumebr(GetBasketIds().length);
@@ -175,7 +181,12 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
         <div className="hidden lg:flex gap-4 items-center p-2">
           <div className="flex gap-1 cursor-pointer hover:text-blue-400">
             <ImCreditCard className="text-xl text-blue-400" />
-            <p>Bakiye Yükle</p>
+            <button
+              className="cursor-pointer"
+              onClick={() => setIsPayOpen(true)}
+            >
+              Bakiye Yükle
+            </button>
           </div>
           <Link
             to={"https://www.instagram.com/osmangunduz108/"}
@@ -231,7 +242,12 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
           )}
           <div className="flex gap-1">
             <ImCreditCard className="text-xl text-blue-400" />
-            <p>Bakiye Yükle</p>
+            <button
+              className="cursor-pointer"
+              onClick={() => setIsPayOpen(true)}
+            >
+              Bakiye Yükle
+            </button>
           </div>
         </div>
       </div>
@@ -270,7 +286,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                   : search.length > 0
                   ? "w-full h-[50px] z-50"
                   : "hidden"
-              } absolute top-12 bg-zinc-200 rounded-lg p-2 border-2 border-blue-400 text-black `}
+              } absolute top-12 bg-slate-600 rounded-lg p-2 border-2 border-blue-400 text-white `}
             >
               {isLoading ? (
                 <div className="text-center flex justify-center items-center w-full">
@@ -294,7 +310,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                           <h1 className="font-bold">{game.gameName}</h1>
                           <div className="flex gap-2">
                             {game.gameDiscount > 0 && (
-                              <p className="text-black ">
+                              <p className="text-white ">
                                 {(
                                   game.gamePrice -
                                   game.gamePrice * (game.gameDiscount / 100)
@@ -305,8 +321,8 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                             <p
                               className={`${
                                 game.gameDiscount > 0
-                                  ? "text-gray-600 line-through"
-                                  : "text-black"
+                                  ? "text-zinc-300 line-through"
+                                  : "text-white"
                               }`}
                             >
                               {game.gamePrice} TL
@@ -437,16 +453,14 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                 <div
                   className={`${
                     data?.games?.length > 0 ? "max-h-[250px]" : "h-[50px]"
-                  } w-full bg-zinc-200 rounded-lg border-2 border-blue-400 text-black shadow-xl overflow-hidden`}
+                  } w-full bg-slate-600 rounded-lg border-2 border-blue-400 text-white shadow-xl overflow-hidden`}
                   style={{
                     position: "relative",
                     zIndex: 10000,
                   }}
                 >
                   {isLoading ? (
-                    <div className="p-4">
-                      <p className="text-center">Loading...</p>
-                    </div>
+                    <Spinner className="flex justify-center mt-2"/>
                   ) : (
                     <>
                       {data?.games?.length > 0 ? (
@@ -470,12 +484,12 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                                 />
                               </div>
                               <div className="flex flex-col justify-center flex-1 min-w-0 pointer-events-none">
-                                <h3 className="font-bold text-sm truncate text-gray-900">
+                                <h3 className="font-bold text-sm truncate">
                                   {game.gameName}
                                 </h3>
                                 <div className="flex gap-2">
                                   {game.gameDiscount > 0 && (
-                                    <p className="text-black ">
+                                    <p >
                                       {(
                                         game.gamePrice -
                                         game.gamePrice *
@@ -487,8 +501,8 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
                                   <p
                                     className={`${
                                       game.gameDiscount > 0
-                                        ? "text-gray-600 line-through"
-                                        : "text-black"
+                                        ? "text-zinc-300 line-through"
+                                        : "text-white"
                                     }`}
                                   >
                                     {game.gamePrice.toFixed(2)} TL
@@ -514,6 +528,23 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
       <div className="hidden lg:flex w-full px-2 z-25">
         <NavbarMenus />
       </div>
+      <Modal
+        isOpen={isPayOpen}
+        onClose={() => setIsPayOpen(false)}
+        title="Bakiye Yükle"
+      >
+        <div className="flex flex-col text-[16px] justify-center items-center gap-1 text-zinc-200">
+          <IoIosWarning className="text-[100px] text-red-500" />
+          <p>Paranız burada geçerli değildir.</p>
+          <p>İstediğiniz gibi işlem yapabilirsiniz.</p>
+          <button
+            onClick={() => setIsPayOpen(false)}
+            className="cursor-pointer px-8 py-2 bg-blue-500 rounded-md mt-4"
+          >
+            Alışverişe Devam
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };

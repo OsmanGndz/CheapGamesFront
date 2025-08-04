@@ -4,7 +4,7 @@ import yanslide2 from "../../assets/Yanslides/yanslide2.jpg";
 import yanslide3 from "../../assets/Yanslides/yanslide3.jpg";
 import { FaArrowRight } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FilterHome from "./FilterHome";
 import PlaystationHome from "./PlaystationHome";
 import PCGames from "./PCGames";
@@ -38,7 +38,8 @@ const Home = () => {
         <div className="hidden lg:flex lg:w-[30%] h-full">
           <div className="flex flex-col gap-1 lg:gap-4 w-full h-full">
             {yanSlides.map((slide) => (
-              <div
+              <Link
+              to={"/pc-games/all"}
                 key={slide.title}
                 className="relative w-full h-full cursor-pointer overflow-hidden group"
               >
@@ -50,7 +51,7 @@ const Home = () => {
                 <div className="absolute right-4 bottom-4  transition-all duration-300 opacity-0 group-hover:opacity-100  hover:text-blue-400">
                   <FaArrowRight />
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
