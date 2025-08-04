@@ -133,7 +133,12 @@ const GameDetails = () => {
                     TL
                   </span>
                 )}
-                <span className="text-lg text-zinc-400 line-through whitespace-nowrap">
+                <span
+                  className={`${
+                    data.gameDiscount > 0 &&
+                    "text-zinc-400 line-through text-lg"
+                  } text-2xl whitespace-nowrap`}
+                >
                   {data.gamePrice === 0
                     ? "Ücretsiz"
                     : `${data.gamePrice.toFixed(2)} TL`}
