@@ -28,12 +28,11 @@ const GameDetails = () => {
   const navigate = useNavigate();
 
   const handleAddToBasket = () => {
-    if (isAuthenticated ) {
-      if(data){
+    if (isAuthenticated) {
+      if (data) {
         AddToBasket({ ...data, Id: data.id });
       }
-    }
-    else{
+    } else {
       toast.error("Sepete eklemek için giriş yapmalısınız.");
       navigate("/login");
     }
@@ -71,10 +70,15 @@ const GameDetails = () => {
     if (!isAuthenticated) {
       toast.error("Favorilere ekleme yapmak için önce giriş yapmalısınız.");
       navigate("/login");
+    } else {
+      try {
+        await AddFavorite(id);
+        toast.success("Favori ürünlerinize eklendi.");
+        handleIsFavorite();
+      } catch (error) {
+        toast.error("Favori ürünlerinize eklenirken bir hata oluştu.");
+      }
     }
-    await AddFavorite(id);
-    toast.success("Favori ürünlerinize eklendi.");
-    handleIsFavorite();
   };
 
   const RemoveFromFavorites = async (id: number) => {
@@ -117,34 +121,8 @@ const GameDetails = () => {
                   className="w-full h-auto object-cover rounded-lg shadow-md shadow-blue-400/50"
                 />
               </div>
-              <div className="w-full hidden sm:flex flex-col gap-1 justify-center items-center relative">
-                <h2 className="text-lg font-semibold">Ürün Tanıtımı</h2>
-                <hr className="w-12 border-1 text-blue-400" />
-                <div
-                  className={`text-zinc-100 text-sm p-2 ${
-                    (data.gameDescription?.length || 0) > 200 && showMore
-                      ? "h-auto"
-                      : "h-20"
-                  } overflow-hidden transition-all duration-300 shadow-md shadow-blue-400/50`}
-                >
-                  {data?.gameDescription}
-                </div>
-                {(data.gameDescription?.length || 0) > 200 && (
-                  <button
-                    className="flex items-center text-black gap-1 px-2 cursor-pointer mt-2 bg-zinc-300 absolute -bottom-5"
-                    onClick={() => setShowMore(!showMore)}
-                  >
-                    {showMore ? (
-                      <FaArrowDown className="rotate-180" />
-                    ) : (
-                      <FaArrowDown />
-                    )}
-                    {showMore ? "Daha Az Göster" : "Daha Fazla Göster"}
-                  </button>
-                )}
-              </div>
             </div>
-            <div className="flex flex-col gap-4 w-full sm:w-[60%] mt-8">
+            <div className="flex flex-col gap-8 w-full sm:w-[60%] mt-8">
               <div className="flex items-center w-full font-bold bg-slate-800 rounded-md p-4 gap-2">
                 {data.gameDiscount > 0 && data.gamePrice > 0 && (
                   <span className=" text-2xl text-white whitespace-nowrap  ">
@@ -155,7 +133,12 @@ const GameDetails = () => {
                     TL
                   </span>
                 )}
-                <span className="text-lg text-zinc-400 line-through whitespace-nowrap">
+                <span
+                  className={`${
+                    data.gameDiscount > 0 &&
+                    "text-zinc-400 line-through text-lg"
+                  } text-2xl whitespace-nowrap`}
+                >
                   {data.gamePrice === 0
                     ? "Ücretsiz"
                     : `${data.gamePrice.toFixed(2)} TL`}
@@ -211,6 +194,36 @@ const GameDetails = () => {
                   >
                     <FaHeart className="text-[16px] sm:text-lg text-red-500" />
                     Favorilere Ekle
+                  </button>
+                )}
+              </div>
+              <div className="w-full hidden sm:flex flex-col items-center gap-4 relative">
+                <div className="flex flex-col justify-center items-center ">
+                  <h2 className="text-2xl font-semibold">Ürün Tanıtımı</h2>
+                  <hr className="w-12 border-1 text-blue-400" />
+                </div>
+                <div className="flex w-full justify-start">
+                  <div
+                    className={`text-zinc-100 text-sm p-2 w-full ${
+                      (data.gameDescription?.length || 0) > 400 && showMore
+                        ? "h-auto"
+                        : "h-24"
+                    } overflow-hidden transition-all duration-500 shadow-md shadow-blue-400/50 `}
+                  >
+                    {data?.gameDescription}
+                  </div>
+                </div>
+                {(data.gameDescription?.length || 0) > 400 && (
+                  <button
+                    className="flex justify-center items-center text-black gap-1 px-2 cursor-pointer mt-2 bg-zinc-300 absolute -bottom-5"
+                    onClick={() => setShowMore(!showMore)}
+                  >
+                    {showMore ? (
+                      <FaArrowDown className="rotate-180" />
+                    ) : (
+                      <FaArrowDown />
+                    )}
+                    {showMore ? "Daha Az Göster" : "Daha Fazla Göster"}
                   </button>
                 )}
               </div>
