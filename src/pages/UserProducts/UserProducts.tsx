@@ -1,8 +1,6 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
-  fetchFavories,
   fetchMyProducts,
-  RemoveFavorite,
 } from "../../services/AuthService";
 import ShowGames from "../../components/ShowGames";
 import { useSearchParams } from "react-router-dom";

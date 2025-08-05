@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useState } from "react";
 import { fetchPastOrder } from "../../services/AuthService";
 import { formatDateToReadable } from "../../logic/DateFormat.l";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
-import { FaArrowDown } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { Link } from "react-router-dom";
+
 interface OrderItem {
   id: number;
   name: string;

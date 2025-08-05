@@ -197,7 +197,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsSideBarOpen }) => {
             <FaInstagram className="text-xl text-blue-400" />
             <p>Instagram</p>
           </Link>
-          <div className="flex gap-1 ml-[20%]">
+          <div className="flex gap-1 mx-auto">
             <GiTrophyCup className="text-xl text-blue-400" />
             <p>Türkiye'nin En Büyük Ucuz Oyun Mağazası</p>
           </div>

@@ -79,7 +79,7 @@ const GameCard: React.FC<GameCardProps> = ({
   };
 
   const handleRemoveFromCart = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Kart tıklamasını engelle
+    e.stopPropagation();
     if (!isAuthenticated) {
       navigate("/login");
     } else {
@@ -145,7 +145,7 @@ const GameCard: React.FC<GameCardProps> = ({
       </Link>
 
       {isFavoriteMode ? (
-        <div className="absolute bottom-0 flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-red-600 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer ">
+        <div className="absolute bottom-0 hidden lg:flex justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-red-600 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer ">
           <button
             onClick={() => handleRemoveFromFavories(Id)}
             className="flex items-center justify-center w-full h-full hover:text-white transition-colors duration-200 cursor-pointer gap-2"
@@ -159,12 +159,10 @@ const GameCard: React.FC<GameCardProps> = ({
         <div></div>
       ) : IsOwned(Id) ? (
         <>
-          {/* lg ve üstü: hover ile altta */}
-          <div className="absolute bottom-0  justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer hidden lg:flex">
+          <div className="absolute bottom-0 justify-center items-center p-2 opacity-0 group-hover:opacity-100 duration-300 bg-slate-800 w-full z-20 h-12 rounded-b-lg border-1 cursor-pointer hidden lg:flex">
             <FaCheckCircle className="text-green-400 text-lg mr-2" />
             <span className="text-green-400 font-semibold">Ürünlerinde</span>
           </div>
-          {/* lg altı: sol üst köşede çapraz */}
           <div className="absolute bottom-20 h-8 bg-green-500 text-white px-4 py-1 text-xs font-bold items-center shadow-lg flex lg:hidden z-30 w-full text-center justify-center itemes-center rounded-t-md">
             <FaCheckCircle className="text-white mr-1" />
             Ürünlerinde

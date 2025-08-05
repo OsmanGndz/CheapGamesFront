@@ -18,6 +18,7 @@ import {
 } from "../services/AuthService";
 import { useUser } from "../Context/UserContext";
 import { toast } from "react-toastify";
+import { formatDateToReadable } from "../logic/DateFormat.l";
 
 const GameDetails = () => {
   const { id } = useParams();
@@ -154,6 +155,10 @@ const GameDetails = () => {
                   <p>
                     <strong>Kategori:</strong> {data.categoryName}
                   </p>
+                  <p>
+                    <strong>Yayınlanma Tarihi:</strong>{" "}
+                    {formatDateToReadable(data.releaseDate)}
+                  </p>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -164,7 +169,7 @@ const GameDetails = () => {
                   </div>
                 ) : !isInBasket(Number(id)) ? (
                   <button
-                    className="flex justify-center items-center gap-2 w-full bg-blue-400 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300"
+                    className="flex justify-center items-center gap-2 w-full bg-blue-400 text-white py-2 rounded-md lg:hover:bg-slate-800 border border-white lg:hover:border-blue-400 cursor-pointer transition-colors duration-300"
                     onClick={handleAddToBasket}
                   >
                     <TbBasketPlus className="text-lg sm:text-xl text-white" />
@@ -172,7 +177,7 @@ const GameDetails = () => {
                   </button>
                 ) : (
                   <button
-                    className="flex justify-center items-center gap-2 w-full bg-red-500 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300"
+                    className="flex justify-center items-center gap-2 w-full bg-red-500 text-white py-2 rounded-md lg:hover:bg-slate-800 border border-white lg:hover:border-blue-400 cursor-pointer transition-colors duration-300"
                     onClick={handleRemoveFromBasket}
                   >
                     <TbBasketMinus className="text-lg sm:text-xl text-white" />
@@ -181,7 +186,7 @@ const GameDetails = () => {
                 )}
                 {isFavorite ? (
                   <button
-                    className="flex justify-center items-center gap-2 w-full bg-red-500 text-white py-2 rounded-md hover:bg-slate-800 border border-white hover:border-blue-400 cursor-pointer transition-colors duration-300"
+                    className="flex justify-center items-center gap-2 w-full bg-red-500 text-white py-2 rounded-md lg:hover:bg-slate-800 border border-white lg:hover:border-blue-400 cursor-pointer transition-colors duration-300"
                     onClick={() => RemoveFromFavorites(data.id)}
                   >
                     <FaHeartBroken className="text-lg" />
@@ -189,7 +194,7 @@ const GameDetails = () => {
                   </button>
                 ) : (
                   <button
-                    className="flex justify-center items-center gap-2 w-full  bg-slate-800 text-zinc-200 hover:text-gray-700 py-2 rounded-md hover:bg-zinc-100 border border-white hover:border-black hover:shadow-md hover:shadow-pink-500 cursor-pointer transition-colors duration-300"
+                    className="flex justify-center items-center gap-2 w-full bg-slate-800 text-zinc-200 lg:hover:text-gray-700 py-2 rounded-md lg:hover:bg-zinc-100 border border-white lg:hover:border-black lg:hover:shadow-md lg:hover:shadow-pink-500 cursor-pointer transition-colors duration-300"
                     onClick={() => AddToFavorites(data.id)}
                   >
                     <FaHeart className="text-[16px] sm:text-lg text-red-500" />
