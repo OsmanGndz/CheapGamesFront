@@ -48,7 +48,7 @@ export const fetchGamesByAllFilter = async ({
       params: {
         Category : "Computer",
         minPrice: minPrice || 0,
-        maxPrice: maxPrice || 10000,
+        maxPrice: maxPrice || 5000,
         page: page,
         pageSize: pageSize,
         sortingFilter: sortingFilter,
