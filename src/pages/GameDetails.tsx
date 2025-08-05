@@ -169,7 +169,7 @@ const GameDetails = () => {
                   </div>
                 ) : !isInBasket(Number(id)) ? (
                   <button
-                    className="flex justify-center items-center gap-2 w-full bg-blue-400 text-white py-2 rounded-md hover:bg-slate-800 border border-white lg:hover:border-blue-400 cursor-pointer transition-colors duration-300"
+                    className="flex justify-center items-center gap-2 w-full bg-blue-400 text-white py-2 rounded-md lg:hover:bg-slate-800 border border-white lg:hover:border-blue-400 cursor-pointer transition-colors duration-300"
                     onClick={handleAddToBasket}
                   >
                     <TbBasketPlus className="text-lg sm:text-xl text-white" />
@@ -177,7 +177,7 @@ const GameDetails = () => {
                   </button>
                 ) : (
                   <button
-                    className="flex justify-center items-center gap-2 w-full bg-red-500 text-white py-2 rounded-md hover:bg-slate-800 border border-white lg:hover:border-blue-400 cursor-pointer transition-colors duration-300"
+                    className="flex justify-center items-center gap-2 w-full bg-red-500 text-white py-2 rounded-md lg:hover:bg-slate-800 border border-white lg:hover:border-blue-400 cursor-pointer transition-colors duration-300"
                     onClick={handleRemoveFromBasket}
                   >
                     <TbBasketMinus className="text-lg sm:text-xl text-white" />
