@@ -28,6 +28,9 @@ A portfolio project featuring a modern game marketplace frontend application. Us
 
 Live demo: https://cheap-games-front.vercel.app/
 
+<img width="1920" height="986" alt="image" src="https://github.com/user-attachments/assets/36637f66-73cb-44ce-8755-88b74ce1dbfa" />
+
+
 🛠️ Tech Stack
 
 Core
