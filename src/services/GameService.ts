@@ -47,8 +47,8 @@ export const fetchGamesByAllFilter = async ({
     const response = await api.get("/game/all-filter",{
       params: {
         Category : "Computer",
-        minPrice: minPrice,
-        maxPrice: maxPrice,
+        minPrice: minPrice || 0,
+        maxPrice: maxPrice || 10000,
         page: page,
         pageSize: pageSize,
         sortingFilter: sortingFilter,
@@ -63,8 +63,8 @@ export const fetchGamesByAllFilter = async ({
       pageSize: pageSize,
       Category : Category,
       Platform: Platform,
-      minPrice: minPrice,
-      maxPrice: maxPrice,
+      minPrice: minPrice || 0,
+      maxPrice: maxPrice || 10000,
       sortingFilter: sortingFilter,
       discount: discount ? true : false
     }
