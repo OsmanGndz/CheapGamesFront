@@ -16,6 +16,7 @@ const PCGames = () => {
         Category: "Computer",
         Platform: filter === "Hepsi" ? "Tüm Ürünler" : filter,
         pageSize: 12,
+        page:1
       }),
     staleTime: 1000 * 60 * 30,
   });
