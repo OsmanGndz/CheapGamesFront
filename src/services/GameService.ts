@@ -64,7 +64,7 @@ export const fetchGamesByAllFilter = async ({
       Category : Category,
       Platform: Platform,
       minPrice: minPrice || 0,
-      maxPrice: maxPrice || 10000,
+      maxPrice: maxPrice || 5000,
       sortingFilter: sortingFilter,
       discount: discount ? true : false
     }
