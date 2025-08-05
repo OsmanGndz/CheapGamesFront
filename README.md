@@ -1,6 +1,8 @@
 # 🎮 CheapGames Frontend
 A portfolio project featuring a modern game marketplace frontend application. Users can purchase games in a comprehensive e-commerce experience.
 
+You can acces the backend codes from here: https://github.com/OsmanGndz/CheapGamesAPI
+
 ### Note: This project is purely for educational and portfolio purposes. No real money transactions occur - all operations are simulated.
 
 🌟 Features
